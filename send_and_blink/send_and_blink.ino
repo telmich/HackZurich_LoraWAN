@@ -5,33 +5,77 @@
 #define debugSerial SerialUSB
 #define loraSerial Serial1
 
+/* The number of the device: 1,2,3,4 */
+#define deviceNo 2
+
+
 void BLUE() {
-  digitalWrite(LED_RED, HIGH);
-  digitalWrite(LED_GREEN, HIGH);
-  digitalWrite(LED_BLUE, LOW);
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, HIGH);
+    digitalWrite(LED_BLUE, LOW);
+}
+
+void RED() {
+    digitalWrite(LED_RED, LOW);
+    digitalWrite(LED_GREEN, HIGH);
+    digitalWrite(LED_BLUE, HIGH);
+}
+
+void YELLOW() {
+    digitalWrite(LED_RED, LOW);
+    digitalWrite(LED_GREEN, LOW);
+    digitalWrite(LED_BLUE, HIGH);
+}
+
+void WHITE() {
+    digitalWrite(LED_RED, LOW);
+    digitalWrite(LED_GREEN, LOW);
+    digitalWrite(LED_BLUE, LOW);
+}
+
+
+void GREEN() {
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, LOW);
+    digitalWrite(LED_BLUE, HIGH);
 }
 
 void CLEAR() {
-     digitalWrite(LED_RED, HIGH);
-     digitalWrite(LED_GREEN, HIGH);
-     digitalWrite(LED_BLUE, HIGH);
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, HIGH);
+    digitalWrite(LED_BLUE, HIGH);
 }
 
-void blueBlink() {
-     BLUE();
-     delay(30);
-     CLEAR();
+void blink(int length) {
+    switch(deviceNo) {
+    case 1:
+        BLUE();
+        break;
+    case 2:
+        RED();
+        break;
+    case 3:
+        GREEN();
+        break;
+    case 4:
+        YELLOW();
+        break;
+    }
+    delay(length);
+    CLEAR();
 }
 
 
 // OTAA
-// Random numbers chosen:
-uint8_t DevEUI[8] = { 0x9c, 0xd9, 0x0b, 0xb5, 0x2b, 0x6a, 0x1d, 0x01 };
+// Random numbers chosen + device id
+uint8_t DevEUI[8] = { 0x9c, 0xd9, 0x0b, 0xb5, 0x2b, 0x6a, 0x1d, deviceNo };
 
 uint8_t AppEUI[8] = { 0xd4, 0x16, 0xcd, 0x0b, 0x7b, 0xcf, 0x2d, 0x5c };
 
 uint8_t AppKey[16] = { 0xa9, 0xbc, 0x8b, 0x6a, 0x81, 0x75, 0xf6, 0x33,
 0xe0, 0xd6, 0x64, 0xd9, 0x2b, 0xcb, 0x13, 0x78 };
+
+uint8_t counter;
 
 void setupLoRaOTAA(){
   if (LoRaBee.initOTA(loraSerial, DevEUI, AppEUI, AppKey, true))
@@ -68,7 +112,10 @@ void setup() {
   // LoRaBee.setDiag(debugSerial); // optional
 
   setupLED();
-  blueBlink();
+  blink(60);
+
+  /* used for blinking */
+  counter=0;
 
   //connect to the LoRa Network
   setupLoRa();
@@ -122,10 +169,19 @@ void sendPacket(String packet){
 }
 
 void loop() {
+
   // put your main code here, to run repeatedly:
   String packet = "SODAQ";
-  sendPacket(packet);
-  blueBlink();
 
-  delay(5000);
+  /* Blink long after sending packet */
+  if(counter >= 60) {
+      sendPacket(packet);
+      blink(500);
+      counter = 0;
+  } else {
+      blink(30);
+      counter++;
+  }
+
+  delay(1000);
 }
