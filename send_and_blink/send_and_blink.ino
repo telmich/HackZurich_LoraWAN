@@ -6,8 +6,12 @@
 #define loraSerial Serial1
 
 /* The number of the device: 1,2,3,4 */
-#define deviceNo 2
+#define deviceNo 4
 
+/* LoraOne / Sodaq one have RGB LED */
+#ifdef LED_RED
+
+#define beePin ENABLE_PIN_IO
 
 void BLUE() {
     digitalWrite(LED_RED, HIGH);
@@ -66,6 +70,29 @@ void blink(int length) {
 }
 
 
+void setupLED() {
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+}
+
+#else
+
+#define beePin BEE_VCC
+
+void blink(int length) {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(length);
+  digitalWrite(LED_BUILTIN, LOW);
+}
+
+void setupLED() { 
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+#endif
+
+
 // OTAA
 // Random numbers chosen + device id
 uint8_t DevEUI[8] = { 0x9c, 0xd9, 0x0b, 0xb5, 0x2b, 0x6a, 0x1d, deviceNo };
@@ -88,16 +115,14 @@ void setupLoRaOTAA(){
   }
 }
 
-void setupLED() {
-  pinMode(LED_RED, OUTPUT);
-  pinMode(LED_GREEN, OUTPUT);
-  pinMode(LED_BLUE, OUTPUT);
-}
 
 void setup() {
-  //Power up the LoRaBEE
+  //Power up the LoRaBEE - on loraone/sodaq one
+#ifdef LED_RED  
   pinMode(ENABLE_PIN_IO, OUTPUT); // ONE
-  digitalWrite(ENABLE_PIN_IO, HIGH); // ONE
+#endif
+  
+  digitalWrite(beePin, HIGH); // ONE
   delay(3000);
 
   while ((!SerialUSB) && (millis() < 10000)){
