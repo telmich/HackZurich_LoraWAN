@@ -26,7 +26,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         length = int(self.headers['Content-Length'])
-        post_data = urllib.parse.parse_qs(self.rfile.read(length).decode('utf-8'))
+        post_data = self.rfile.read(length).decode('utf-8')
 
         # Print on stdout
         print(post_data)
