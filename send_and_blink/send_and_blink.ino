@@ -59,7 +59,7 @@ void blink(int length) {
         GREEN();
         break;
     case 4:
-        YELLOW();
+        WHITE();
         break;
     }
     delay(length);
