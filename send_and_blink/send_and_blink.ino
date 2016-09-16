@@ -79,9 +79,6 @@ void setupLED() {
   pinMode(LED_BLUE, OUTPUT);
 }
 
-void setupWater() {
-     pinMode(WATER_SENSOR, INPUT);
-}
 
 // OTAA
 // Random numbers chosen + device id
@@ -115,6 +112,11 @@ float readLight()
     int sensorValue = analogRead(LIGHT_SENSOR);
     return (float)(1023-sensorValue)*10/sensorValue;
 }
+
+void setupWater() {
+     pinMode(WATER_SENSOR, INPUT);
+}
+
 
 boolean hasWater()
 {
