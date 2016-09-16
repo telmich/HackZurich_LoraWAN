@@ -20,6 +20,10 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes(message, "utf8"))
         return
 
+    def do_POST(self):
+        length = int(self.headers['Content-Length'])
+        post_data = urllib.parse.parse_qs(self.rfile.read(length).decode('utf-8'))
+        print(post_data)
 
 
 
