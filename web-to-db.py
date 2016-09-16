@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
 import urllib
+import psycopg2
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
+
+
 
 # HTTPRequestHandler class
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
@@ -24,7 +27,19 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         post_data = urllib.parse.parse_qs(self.rfile.read(length).decode('utf-8'))
+
+        # Print on stdout
         print(post_data)
+
+        # And insert into the db
+        self.insert_xml(post_data)
+
+    def insert_xml():
+        try:
+            conn = psycopg2.connect("dbname=hackzurich")
+        except Exception as e:
+            print("DB Insert failed: %s" % e)
+
 
 
 
