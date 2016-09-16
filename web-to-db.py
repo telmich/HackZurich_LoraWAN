@@ -5,9 +5,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # HTTPRequestHandler class
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
-    # GET
-  def do_GET(self):
-      # Send response status code
+    # not used, just a sample
+    def do_GET(self):
+        # Send response status code
         self.send_response(200)
 
         # Send headers
