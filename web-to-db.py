@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import urllib
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
