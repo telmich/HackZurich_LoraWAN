@@ -6,9 +6,15 @@
 #define loraSerial Serial1
 
 /* The number of the device: 1,2,3,4 */
-#define deviceNo 4
+#define deviceNo 1
 
 #define beePin ENABLE_PIN_IO
+
+#define LOUDNESS_SENSOR 0
+#define LIGHT_SENSOR 2
+#define WATER_SENSOR 6
+
+int loudness;
 
 void BLUE() {
     digitalWrite(LED_RED, HIGH);
@@ -73,6 +79,10 @@ void setupLED() {
   pinMode(LED_BLUE, OUTPUT);
 }
 
+void setupWater() {
+     pinMode(WATER_SENSOR, INPUT);
+}
+
 // OTAA
 // Random numbers chosen + device id
 uint8_t DevEUI[8] = { 0x9c, 0xd9, 0x0b, 0xb5, 0x2b, 0x6a, 0x1d, deviceNo };
@@ -94,6 +104,27 @@ void setupLoRaOTAA(){
     debugSerial.println("OTAA Setup failed!");
   }
 }
+
+int readLoudness()
+{
+	return analogRead(LOUDNESS_SENSOR);
+}
+
+float readLight()
+{
+    int sensorValue = analogRead(LIGHT_SENSOR);
+    return (float)(1023-sensorValue)*10/sensorValue;
+}
+
+boolean hasWater()
+{
+    if(digitalRead(WATER_SENSOR) == LOW) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 
 void setup() {
@@ -120,8 +151,12 @@ void setup() {
   /* used for blinking */
   counter=0;
 
+  loudness = 0;
+
   //connect to the LoRa Network
   setupLoRa();
+
+  setupWater();
 
 }
 
@@ -172,14 +207,33 @@ void sendPacket(String packet){
 }
 
 void loop() {
+  loudness = readLoudness();
 
-  // put your main code here, to run repeatedly:
-  String packet = "SODAQ";
+  String data_loudness = String("loudness=" + String(loudness, DEC));
+  debugSerial.println(data_loudness);
+
+  String data_light = String("light=" + String(readLight(), 3));
+  debugSerial.println(data_light);
+
+  String data_water;
+  if(hasWater()) {
+      data_water = String("water=true");
+  } else {
+      data_water = String("water=false");
+  }
+  debugSerial.println(data_water);
+
 
   /* Blink long after sending packet */
-  if(counter >= 60) {
-      sendPacket(packet);
+  if(counter >= 10) {
+      blink(20);
+      delay(10);
+      blink(20);
+      sendPacket(data_loudness);
       blink(500);
+      sendPacket(data_light);
+      blink(500);
+      sendPacket(data_water);
       counter = 0;
   } else {
       blink(30);

@@ -34,7 +34,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         # And insert into the db
         self.insert_xml(post_data)
 
-    def insert_xml(self, data):
+    def insert_xml(self, data2):
         try:
             conn = psycopg2.connect("dbname=hackzurich")
             cursor = conn.cursor()
