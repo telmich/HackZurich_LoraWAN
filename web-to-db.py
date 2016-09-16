@@ -39,6 +39,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
             conn = psycopg2.connect("dbname=hackzurich")
             cursor = conn.cursor()
             cursor.execute("insert into data (packet) values (%s)",  (data, ))
+            cursor.connection.commit()
             conn.close()
         except Exception as e:
             print("DB Insert failed: %s" % e)
