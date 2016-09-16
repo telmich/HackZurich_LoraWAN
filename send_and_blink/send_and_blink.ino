@@ -13,6 +13,8 @@
 #define LOUDNESS_SENSOR 0
 #define LIGHT_SENSOR 2
 #define WATER_SENSOR 6
+#define BUZZER 8
+#define MAGNETIC_SWITCH 12
 
 int loudness;
 
@@ -72,6 +74,12 @@ void blink(int length) {
     CLEAR();
 }
 
+void beep(int howlong) {
+    digitalWrite(BUZZER, HIGH);
+    delay(howlong);
+    digitalWrite(BUZZER, LOW);
+}
+
 
 void setupLED() {
   pinMode(LED_RED, OUTPUT);
@@ -127,6 +135,25 @@ boolean hasWater()
     }
 }
 
+void setupBuzzer()
+{
+    pinMode(BUZZER, OUTPUT);
+}
+
+
+void setupMagnet()
+{
+    pinMode(MAGNETIC_SWITCH, INPUT);
+}
+
+boolean isMagnetic()
+{
+  if(digitalRead(MAGNETIC_SWITCH) == HIGH)
+      return true;
+  else
+      return false;
+}
+
 
 
 void setup() {
@@ -135,6 +162,10 @@ void setup() {
 
   digitalWrite(beePin, HIGH); // ONE
   delay(3000);
+
+  /* Enable the pins 2/3, 6/7 and 8/9 */
+  pinMode(11, OUTPUT);
+  digitalWrite(11, HIGH);
 
   while ((!SerialUSB) && (millis() < 10000)){
     // Wait 10 seconds for the Serial Monitor
@@ -159,6 +190,8 @@ void setup() {
   setupLoRa();
 
   setupWater();
+  setupBuzzer();
+  setupMagnet();
 
 }
 
@@ -225,9 +258,17 @@ void loop() {
   }
   debugSerial.println(data_water);
 
+  String data_magnet;
+  if(isMagnetic()) {
+      data_magnet = String("magnet=true");
+  } else {
+      data_magnet = String("magnet=false");
+  }
+  debugSerial.println(data_magnet);
 
   /* Blink long after sending packet */
   if(counter >= 10) {
+      // beep(20);
       blink(20);
       delay(10);
       blink(20);
@@ -236,6 +277,8 @@ void loop() {
       sendPacket(data_light);
       blink(500);
       sendPacket(data_water);
+      blink(500);
+      sendPacket(data_magnet);
       counter = 0;
   } else {
       blink(30);
