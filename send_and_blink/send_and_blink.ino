@@ -127,6 +127,8 @@ int readLight()
 {
     int sensorValue = analogRead(LIGHT_SENSOR);
 
+    return sensorValue;
+
     return map(sensorValue, 1000, 200000, 1, 100);
     // return (float)(sensorValue)*10/sensorValue;
     // return (float)(1023-sensorValue)*10/sensorValue;
@@ -137,7 +139,6 @@ int readLight()
 void setupWater() {
      pinMode(WATER_SENSOR, INPUT);
 }
-
 
 boolean hasWater()
 {
