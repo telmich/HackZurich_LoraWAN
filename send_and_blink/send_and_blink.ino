@@ -117,7 +117,7 @@ int readLoudness()
 
 int readLight()
 {
-    return analogRead(LIGHT_SENSOR);
+    return analogRead(LIGHT_SENSOR) / 1000;
 }
 
 void setupWater() {
@@ -241,6 +241,12 @@ void sendPacket(String packet){
 }
 
 void loop() {
+
+  /* Announce begin of code */
+  blink(20); delay(50);
+  blink(20); delay(50);
+  blink(20); delay(50);
+
   loudness = readLoudness();
 
   String data_loudness = String("loudness=" + String(loudness, DEC));
@@ -265,7 +271,17 @@ void loop() {
   }
   debugSerial.println(data_magnet);
 
-  /* Blink long after sending packet */
+
+  sendPacket(data_loudness);
+  blink(20); delay(2980);
+  sendPacket(data_light);
+  blink(20); delay(2980);
+  sendPacket(data_water);
+  blink(20); delay(2980);
+  sendPacket(data_magnet);
+
+
+  /* Blink long after sending packet
   if(counter >= 10) {
       // Beep(20);
       blink(20);
@@ -283,6 +299,7 @@ void loop() {
       blink(30);
       counter++;
   }
+  */
 
-  delay(1000);
+  // delay(1000);
 }
