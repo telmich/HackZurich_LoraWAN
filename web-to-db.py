@@ -41,9 +41,12 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         self.to_dashboard(post_data)
 
     def to_dashboard(self, data):
-
         dev = self.devEUI(data)
         text = self.payload(data)
+
+        ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/data")
+        ws.send("%s", data)
+        ws.close()
 
         ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/rawmessage")
         ws.send("%s:%s" % (dev, text))
