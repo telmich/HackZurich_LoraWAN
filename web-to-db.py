@@ -45,7 +45,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         text = self.payload(data)
 
         ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/data")
-        ws.send("%s", data)
+        ws.send("%s" % data)
         ws.close()
 
         ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/rawmessage")
