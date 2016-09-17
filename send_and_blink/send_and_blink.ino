@@ -15,6 +15,7 @@
 #define WATER_SENSOR 6
 #define BUZZER 8
 #define MAGNETIC_SWITCH 12
+#define TEMPERATURE     13
 
 int loudness;
 
@@ -149,6 +150,25 @@ boolean hasWater()
     }
 }
 
+void setupTemp() {
+     pinMode(TEMPERATURE, INPUT);
+}
+
+float readTemp()
+{
+    float temperature;
+    int B=4250;            //B value of the thermistor
+    float resistance;
+    int a;
+
+    a=analogRead(TEMPERATURE);
+    resistance=(float)(1023-a)*10000/a; //get the resistance of the sensor;
+    temperature=1/(log(resistance/10000)/B+1/298.15)-273.15;//convert to temperature via datasheet&nbsp;;
+
+	return temperature;
+}
+
+
 void setupBuzzer()
 {
     pinMode(BUZZER, OUTPUT);
@@ -271,6 +291,10 @@ void loop() {
   String data_light = String("light=" + String(readLight(), 3));
   debugSerial.println(data_light);
 
+  String data_temp = String("temp=" + String(readTemp(), 3));
+  debugSerial.println(data_temp);
+
+
   String data_water;
   if(hasWater()) {
       data_water = String("water=1");
@@ -292,6 +316,8 @@ void loop() {
 
   sendPacket(data_loudness);
   blink(20); delay(2980);
+  sendPacket(data_temp);
+  blink(20); delay(2980);
   sendPacket(data_light);
   blink(20); delay(2980);
   sendPacket(data_water);
@@ -305,6 +331,8 @@ void loop() {
       blink(20);
       delay(10);
       blink(20);
+      sendPacket(data_temp);
+      blink(500);
       sendPacket(data_loudness);
       blink(500);
       sendPacket(data_light);
