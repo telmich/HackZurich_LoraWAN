@@ -49,8 +49,8 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
     def to_dashboard(self, data):
         ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/alarmsocket")
-        dev = devEUI(data)
-        text = payload(data)
+        dev = self.devEUI(data)
+        text = self.payload(data)
 
         ws.send("%s:%s" % (dev, text))
         ws.close()
