@@ -44,6 +44,9 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
         # Send to Martin
 
+        # Sendo to dashboard
+        to_dashboard(post_data)
+
     def to_dashboard(self, data):
         ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/alarmsocket")
         ws.send(data)
