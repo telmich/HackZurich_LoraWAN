@@ -8,14 +8,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import re
 
 
-from websocket import create_connection
-ws = create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/alarmsocket")
-ws.send("Hello, World")
-# result =  ws.recv()
-# print "Received '%s'" % result
-ws.close()
-
-
 # HTTPRequestHandler class
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
     # not used, just a sample
@@ -56,6 +48,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         # Working lora node
         if dev == "9CD90BB52B6A1D01":
             key, value = text.split("=")
+            print("Trying to send: %s:%s" (key, value))
             ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/%s" % (key))
             ws.send("%s" % (value))
             ws.close()
