@@ -127,14 +127,7 @@ int readLoudness()
 int readLight()
 {
     int sensorValue = analogRead(LIGHT_SENSOR);
-    
-    //return sensorValue;
-
     return map(sensorValue, 11, 27333, 0, 413);
-    // return (float)(sensorValue)*10/sensorValue;
-    // return (float)(1023-sensorValue)*10/sensorValue;
-    // Not a great value
-//    return analogRead(LIGHT_SENSOR) / 1000;
 }
 
 void setupWater() {
