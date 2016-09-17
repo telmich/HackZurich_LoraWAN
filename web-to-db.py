@@ -64,7 +64,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         return root[7].text
 
     def payload(self, data):
-        myhex = self.payload_hex(data).
+        myhex = self.payload_hex(data)
         return bytes.fromhex(myhex).decode('utf-8')
 
     def insert_xml(self, data):
