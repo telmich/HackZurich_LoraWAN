@@ -2,9 +2,17 @@
 
 import urllib
 import psycopg2
+import websocket
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+
+from websocket import create_connection
+ws = create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/alarmsocket")
+ws.send("Hello, World")
+# result =  ws.recv()
+# print "Received '%s'" % result
+ws.close()
 
 
 # HTTPRequestHandler class
@@ -34,7 +42,15 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         # And insert into the db
         self.insert_xml(post_data)
 
-    def insert_xml(self, data2):
+        # Send to Martin
+
+    def to_dashboard(self, data):
+        ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/alarmsocket")
+        ws.send(data)
+        ws.close()
+
+
+    def insert_xml(self, data):
         try:
             conn = psycopg2.connect("dbname=hackzurich")
             cursor = conn.cursor()
