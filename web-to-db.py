@@ -45,13 +45,22 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         dev = self.devEUI(data)
         text = self.payload(data)
 
+        ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/rawmessage")
+        ws.send("%s:%s" % (dev, text))
+        ws.close()
+
         # Working lora node
         if dev == "9CD90BB52B6A1D01":
-            key, value = text.split("=")
-            print("Trying to send: %s:%s" (key, value))
-            ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/%s" % (key))
-            ws.send("%s" % (value))
-            ws.close()
+            try:
+                key, value = text.split("=")
+                print("Trying to send: %s:%s" % (key, value))
+                ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/%s" % (key))
+                ws.send("%s" % (value))
+                ws.close()
+
+            except ValueError:
+                print("Cannot split: %s" % (text))
+
 
     def devEUI(self, data):
         root = ET.fromstring(data)
