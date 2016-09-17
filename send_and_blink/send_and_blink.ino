@@ -115,10 +115,13 @@ int readLoudness()
 	return analogRead(LOUDNESS_SENSOR);
 }
 
-float readLight()
+int readLight()
 {
     int sensorValue = analogRead(LIGHT_SENSOR);
-    return (float)(1023-sensorValue)*10/sensorValue;
+
+    return map(sensorValue, 1000, 200000, 1, 100);
+    // return (float)(sensorValue)*10/sensorValue;
+    // return (float)(1023-sensorValue)*10/sensorValue;
     // Not a great value
 //    return analogRead(LIGHT_SENSOR) / 1000;
 }
