@@ -5,6 +5,7 @@ import psycopg2
 import websocket
 import xml.etree.ElementTree as ET
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import re
 
 
 from websocket import create_connection
@@ -48,12 +49,17 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         self.to_dashboard(post_data)
 
     def to_dashboard(self, data):
-        ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/alarmsocket")
+
         dev = self.devEUI(data)
         text = self.payload(data)
 
-        ws.send("%s:%s" % (dev, text))
-        ws.close()
+        # Working lora node
+        if dev == "9CD90BB52B6A1D01":
+            key, value = text.split("=")
+            ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/%s" % (key))
+
+            ws.send("%s:%s" % (dev, text))
+            ws.close()
 
     def devEUI(self, data):
         root = ET.fromstring(data)

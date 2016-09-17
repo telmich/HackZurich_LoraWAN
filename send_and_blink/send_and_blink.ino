@@ -252,23 +252,24 @@ void loop() {
 
   String data_water;
   if(hasWater()) {
-      data_water = String("water=true");
+      data_water = String("water=1");
   } else {
-      data_water = String("water=false");
+      data_water = String("water=0");
   }
   debugSerial.println(data_water);
 
   String data_magnet;
   if(isMagnetic()) {
-      data_magnet = String("magnet=true");
+      data_magnet = String("magnet=1");
   } else {
-      data_magnet = String("magnet=false");
+      data_magnet = String("magnet=0");
   }
   debugSerial.println(data_magnet);
 
   /* Blink long after sending packet */
   if(counter >= 10) {
-      // beep(20);
+      sendPacket("Teststring");
+      // Beep(20);
       blink(20);
       delay(10);
       blink(20);
