@@ -75,8 +75,16 @@ void blink(int length) {
 }
 
 void beep(int howlong) {
+     buzzOn();
+     delay(howlong);
+     buzzOff();
+}
+
+void buzzOn() {
     digitalWrite(BUZZER, HIGH);
-    delay(howlong);
+}
+
+void buzzOff() {
     digitalWrite(BUZZER, LOW);
 }
 
@@ -248,6 +256,7 @@ void sendPacket(String packet){
 
 void loop() {
 
+
   /* Announce begin of code */
   blink(20); delay(50);
   blink(20); delay(50);
@@ -264,8 +273,10 @@ void loop() {
   String data_water;
   if(hasWater()) {
       data_water = String("water=1");
+      buzzOn();
   } else {
       data_water = String("water=0");
+      buzzOff();
   }
   debugSerial.println(data_water);
 
