@@ -3,7 +3,7 @@
 import urllib
 import psycopg2
 import websocket
-
+import xml.etree.ElementTree as ET
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
@@ -42,16 +42,30 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         # And insert into the db
         self.insert_xml(post_data)
 
-        # Send to Martin
+        # Send to Martin / port 8001
 
         # Sendo to dashboard
-        to_dashboard(post_data)
+        self.to_dashboard(post_data)
 
     def to_dashboard(self, data):
         ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/alarmsocket")
-        ws.send(data)
+        dev = devEUI(data)
+        text = payload(data)
+
+        ws.send("%s:%s" % (dev, text))
         ws.close()
 
+    def devEUI(self, data):
+        root = ET.fromstring(data)
+        return root[1].text
+
+    def payload_hex(self, data):
+        root = ET.fromstring(data)
+        return root[7].text
+
+    def payload(self, data):
+        myhex = self.payload_hex(data).
+        return bytes.fromhex(myhex).decode('utf-8')
 
     def insert_xml(self, data):
         try:
