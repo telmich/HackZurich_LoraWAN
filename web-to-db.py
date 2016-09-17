@@ -57,8 +57,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         if dev == "9CD90BB52B6A1D01":
             key, value = text.split("=")
             ws = websocket.create_connection("wss://home-safety-visual.eu-gb.mybluemix.net/%s" % (key))
-
-            ws.send("%s:%s" % (dev, text))
+            ws.send("%s" % (text))
             ws.close()
 
     def devEUI(self, data):
