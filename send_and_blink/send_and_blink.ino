@@ -268,7 +268,6 @@ void loop() {
 
   /* Blink long after sending packet */
   if(counter >= 10) {
-      sendPacket("Teststring");
       // Beep(20);
       blink(20);
       delay(10);
