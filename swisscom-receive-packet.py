@@ -3,10 +3,11 @@
 import urllib
 import psycopg2
 import websocket
-import xml.etree.ElementTree as ET
+# import xml.etree.ElementTree as ET
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import re
-
+import json
+import pprint
 
 # HTTPRequestHandler class
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
@@ -31,6 +32,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
         # Print on stdout
         print(post_data)
+        print(self.dataToString(post_data))
 
         # And insert into the db
 #        self.insert_xml(post_data)
@@ -64,6 +66,20 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
             except ValueError:
                 print("Cannot split: %s" % (text))
 
+
+    def jsonToDict(self, data):
+        return json.loads(data)
+
+    def dictToPayload(self, thedict):
+        return thedict['DevEUI_uplink']['payload_hex']
+
+    def hexToString(self, myhex):
+        return bytes.fromhex(myhex).decode('utf-8')
+
+    def dataToString(self, data):
+        mydict = self.jsonToDict(data)
+        payload = self.dictToPayload(mydict)
+        return self.hexToString(payload)
 
     def devEUI(self, data):
         root = ET.fromstring(data)
