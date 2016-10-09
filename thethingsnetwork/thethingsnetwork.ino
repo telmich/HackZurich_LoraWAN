@@ -319,8 +319,11 @@ void loop() {
 
   */
 
-//  sendPacket(data_loudness);
-  blink(20); delay(2980);
+  int wait = 10000;
+
+  debugSerial.println(String("wait=" + String(wait)));
+  sendPacket(data_loudness);
+  blink(20); delay(wait);
 
 
   /*sendPacket(data_temp);
