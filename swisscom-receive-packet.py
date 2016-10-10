@@ -35,7 +35,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         print(self.dataToString(post_data))
 
         # And insert into the db
-#        self.insert_xml(post_data)
+        self.insert_json("swisscom", post_data)
 
         # Send to Martin / port 8001
 
@@ -92,6 +92,18 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
     def payload(self, data):
         myhex = self.payload_hex(data)
         return bytes.fromhex(myhex).decode('utf-8')
+
+    def insert_json(self, provider, data):
+        try:
+            conn = psycopg2.connect("dbname=lorawan")
+            cursor = conn.cursor()
+            cursor.execute("insert into packets values (DEFAULT, DEFAULT, '%s', '%s')",  (provider, data, ))
+            cursor.connection.commit()
+            conn.close()
+        except Exception as e:
+            print("DB Insert failed: %s" % e)
+
+
 
     def insert_xml(self, data):
         try:
