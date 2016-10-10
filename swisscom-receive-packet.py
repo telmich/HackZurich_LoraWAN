@@ -32,7 +32,10 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
         # Print on stdout
         print(post_data)
-        print(self.dataToString(post_data))
+
+        payload = self.dataToString(post_data)
+        deveui = self.dataToDevEUI(post_data)
+        print("{}:{}".format(deveui, payload))
 
         # And insert into the db
         self.insert_json("swisscom", post_data)
@@ -81,6 +84,11 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         payload = self.dictToPayload(mydict)
         return self.hexToString(payload)
 
+    def dataToDevEUI(self, data):
+        mydict = self.jsonToDict(data)
+        eui = mydict['DevEUI_uplink']['DevEUI']
+        return eui
+
     def devEUI(self, data):
         root = ET.fromstring(data)
         return root[1].text
@@ -93,11 +101,11 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         myhex = self.payload_hex(data)
         return bytes.fromhex(myhex).decode('utf-8')
 
-    def insert_json(self, provider, data):
+    def insert_json(self, provider, data, payload='', deveui=''):
         try:
             conn = psycopg2.connect("dbname=lorawan")
             cursor = conn.cursor()
-            cursor.execute("insert into packets values (DEFAULT, DEFAULT, %s, %s)",  (provider, data, ))
+            cursor.execute("insert into packets values (DEFAULT, DEFAULT, %s, %s, %s, %s)",  (provider, data, payload, deveui))
             cursor.connection.commit()
             conn.close()
         except Exception as e:
