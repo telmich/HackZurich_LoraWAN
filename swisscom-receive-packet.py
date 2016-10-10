@@ -97,7 +97,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         try:
             conn = psycopg2.connect("dbname=lorawan")
             cursor = conn.cursor()
-            cursor.execute("insert into packets values (DEFAULT, DEFAULT, '%s', '%s')",  (provider, data, ))
+            cursor.execute("insert into packets values (DEFAULT, DEFAULT, %s, %s)",  (provider, data, ))
             cursor.connection.commit()
             conn.close()
         except Exception as e:
