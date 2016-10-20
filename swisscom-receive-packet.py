@@ -40,8 +40,6 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         # And insert into the db
         self.insert_json("swisscom", post_data)
 
-        # Send to Martin / port 8001
-
         # Sendo to dashboard
 #        self.to_dashboard(post_data)
 
@@ -110,7 +108,6 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
             conn.close()
         except Exception as e:
             print("DB Insert failed: %s" % e)
-
 
 
     def insert_xml(self, data):
