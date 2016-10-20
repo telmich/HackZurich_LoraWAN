@@ -38,7 +38,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         print("{}:{}".format(deveui, payload))
 
         # And insert into the db
-        self.insert_json("swisscom", post_data)
+        self.insert_json("swisscom", post_data, payload, deveui)
 
         # Sendo to dashboard
 #        self.to_dashboard(post_data)
