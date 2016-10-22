@@ -36,20 +36,19 @@ void CLEAR() {
     digitalWrite(LED_BLUE, HIGH);
 }
 
-
 void blink(int length) {
     switch(deviceNo) {
     case 1:
         BLUE();
         break;
     case 2:
-        WHITE();
+        RED();
         break;
     case 3:
         GREEN();
         break;
     case 4:
-        RED();
+        WHITE();
         break;
     }
     delay(length);
