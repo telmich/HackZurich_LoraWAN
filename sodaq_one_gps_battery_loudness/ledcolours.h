@@ -1,0 +1,2 @@
+
+void blink(int length);
