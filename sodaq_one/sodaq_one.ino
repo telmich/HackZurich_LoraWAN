@@ -11,11 +11,6 @@
 #define USE_LOUDNESS 1
 #define BUZZER_PIN 2
 
-void sendBatVoltage() {
-  String battery = String("bat1=") + String(getBatteryVoltage());
-  sendPacket(battery);
-}
-
 void signal_loop_start()
 {
     blink(30); delay(50);
@@ -53,7 +48,6 @@ void sendIntAsString(String prefix, int value) {
 }
 
 String tmps;
-int tmpi;
 
 void loop() {
     signal_loop_start();
@@ -61,15 +55,8 @@ void loop() {
     loraSend(String("node=")  + String(deviceNo));
     sendIntAsString("battery=", getBatteryVoltage());
     sendIntAsString("loudness=", readLoudness());
-
-    tmps = getSunLight();
-    debugSerial.println(tmps);
-    loraSend(tmps);
-
-    readCompass();
-    debugSerial.println(compassReport);
-
-    // buzz(30);
+    loraSend(getSunLight());
+    loraSend(getCompass());
 
     /* if((tmps = gpsGetPostion(120)) != "") { */
     /*     loraSend(tmps); */
