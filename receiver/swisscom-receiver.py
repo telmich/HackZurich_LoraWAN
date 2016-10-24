@@ -3,7 +3,6 @@
 import urllib
 import psycopg2
 import websocket
-# import xml.etree.ElementTree as ET
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import re
 import json
@@ -29,9 +28,6 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(length).decode('utf-8')
-
-        # Print on stdout
-        print(post_data)
 
         payload = self.dataToString(post_data)
         deveui = self.dataToDevEUI(post_data)
@@ -119,8 +115,6 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
             conn.close()
         except Exception as e:
             print("DB Insert failed: %s" % e)
-
-
 
 
 if __name__ == '__main__':
