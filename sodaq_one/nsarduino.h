@@ -11,6 +11,13 @@ void buzz(int ms);
 /* compass.ino */
 extern char compassReport[80];
 
+/* ledcolours.ino */
+void setupLED();
+
+/* loudness.ino */
+int readLoudness();
+
+
 /* lora.ino */
 void setupLoRa();
 void sendPacket(String packet);

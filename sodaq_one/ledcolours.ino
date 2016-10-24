@@ -54,3 +54,9 @@ void blink(int length) {
     delay(length);
     CLEAR();
 }
+
+void setupLED() {
+    pinMode(LED_RED, OUTPUT);
+    pinMode(LED_GREEN, OUTPUT);
+    pinMode(LED_BLUE, OUTPUT);
+}
