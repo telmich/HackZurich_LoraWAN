@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-int readLoudness()
+int readLoudness(int pin)
 {
-	return analogRead(LOUDNESS_SENSOR);
+	return analogRead(pin);
 }

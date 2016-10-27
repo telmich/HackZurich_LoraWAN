@@ -87,4 +87,7 @@ void loraSend(String packet){
     default:
         break;
     }
+
+    /* Delay some time to give avoid keeping the device busy */
+    delay(2000);
 }

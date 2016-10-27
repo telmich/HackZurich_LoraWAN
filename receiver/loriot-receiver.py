@@ -19,9 +19,12 @@ class Loriot():
         while True:
             result = self.ws.recv()
             print(result)
-            jdata = jsonToDict(result)
-            eui = devEUI(jdata)
-            payload = get_payloan(jdata)
+
+            jdata = self.jsonToDict(result)
+            eui = self.devEUI(jdata)
+            self.insert_json("loriot", result, deveui=eui)
+
+            # payload = self.get_payload(jdata)
 
 
     def jsonToDict(self, data):
@@ -30,8 +33,9 @@ class Loriot():
     def devEUI(self, data):
         return data['EUI']
 
-    def get_payload(self, ):
-        return data['EUI']
+    def get_payload(self, data):
+        return ""
+        # return data['EUI']
 
     def insert_json(self, provider, data, payload='', deveui=''):
         try:

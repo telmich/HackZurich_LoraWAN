@@ -1,14 +1,20 @@
 #include <Arduino.h>
 #include <Sodaq_UBlox_GPS.h>
 
-void gpsSetup() { sodaq_gps.init(GPS_ENABLE); }
+void gpsSetup() {
+     sodaq_gps.init(GPS_ENABLE);
+     }
+
+/* FIXME: find out power consumption if turned off */
+// void gpsStop() { sodaq_gps.off(); }
+
 
 /*!
  * Find a GPS fix, but first wait a while
  */
 String gpsGetPostion(long waittime)
 {
-    String res;
+    String res = "";
     uint32_t timeout = waittime * 1000;
 
     debugSerial.println(String("waiting for fix ..., timeout=") + timeout + String("ms"));
@@ -24,7 +30,6 @@ String gpsGetPostion(long waittime)
         debugSerial.println(res);
     } else {
         debugSerial.println("GPS: No Fix");
-        return "";
     }
     return res;
 }
@@ -35,6 +40,8 @@ String gpsGetDateTime(long waittime) {
     if (sodaq_gps.scan(false, timeout)) {
         res= String("datetime =") + sodaq_gps.getDateTimeString();
         debugSerial.println(res);
+    } else {
+        debugSerial.println("GPS: No Fix");
     }
 
     return res;

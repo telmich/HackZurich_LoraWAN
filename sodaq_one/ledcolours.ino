@@ -37,20 +37,15 @@ void CLEAR() {
 }
 
 void blink(int length) {
-    switch(deviceNo) {
-    case 1:
+#if LORADEV == 1
         BLUE();
-        break;
-    case 2:
+#elif LORADEV == 2
         RED();
-        break;
-    case 3:
+#elif LORADEV == 3
         GREEN();
-        break;
-    case 4:
+#elif LORADEV == 4
         WHITE();
-        break;
-    }
+#endif
     delay(length);
     CLEAR();
 }

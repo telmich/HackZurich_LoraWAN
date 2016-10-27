@@ -1,14 +1,17 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <math.h>
 
 #include "nsarduino.h"
 
 #define debugSerial SerialUSB
 
-#define deviceNo 2
+/* Which network to use */
+#define LORADEV 1
+// #define SWISSCOM 1
+// #define LORIOT 1
+#define TTN 1
 
-#define LOUDNESS_SENSOR 0
-#define USE_LOUDNESS 1
 #define BUZZER_PIN 2
 
 void signal_loop_start()
@@ -18,10 +21,8 @@ void signal_loop_start()
     blink(30); delay(50);
 }
 
-void signal_loop_end()
-{
-    blink(1000); delay(29000);
-}
+
+int sleepcnt;
 
 void setup() {
     while ((!SerialUSB) && (millis() < 10000)){
@@ -34,10 +35,17 @@ void setup() {
 
     setupLED();
     gpsSetup();
-    setupBuzzer();
+
+    // setupBuzzer();
+
     setupCompass();
     setupSunLight();
     loraSetup();
+
+
+    /* sleep little in the beginning, longer the longer we run */
+    sleepcnt = 0;
+
 }
 
 
@@ -47,22 +55,41 @@ void sendIntAsString(String prefix, int value) {
     loraSend(tmp);
 }
 
+void sendFloatAsString(String prefix, float value) {
+    String tmp = prefix + String(value);
+    debugSerial.println(tmp);
+    loraSend(tmp);
+}
+
+
 String tmps;
+
+#define TEMP_PIN 2
+#define LOUDNESS_PIN 0
+
+#define SLEEPTIME 5*60*1000
 
 void loop() {
     signal_loop_start();
 
-    loraSend(String("node=")  + String(deviceNo));
+    sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
+
+    /* loraSend(String("node=")  + String(deviceNo)); */
     sendIntAsString("battery=", getBatteryVoltage());
-    sendIntAsString("loudness=", readLoudness());
+    sendIntAsString("loudness=", readLoudness(LOUDNESS_PIN));
     loraSend(getSunLight());
     loraSend(getCompass());
 
-    /* if((tmps = gpsGetPostion(120)) != "") { */
-    /*     loraSend(tmps); */
-    /* } */
+    if((tmps = gpsGetPostion(120)) != "") {
+        loraSend(tmps);
+    }
 
-    signal_loop_end();
+    if(sleepcnt < 10) {
+        sleepcnt++;
+        delay(10000);
+    } else {
+        delay(SLEEPTIME);
+    }
 }
 
 
@@ -83,17 +110,22 @@ hex: 3030303441333042
 
 /* humid / temperature */
 /*
-#include <HDC1000.h>
-
-HDC1000 hdc;
-
-float temperature;
-float humidity;
 
 
 */
 
-//    temperature = hdc.getTemperature();
-//    humidity =  hdc.getHumidity();
-//    String msg_tmphumid = String("tmp=") + temperature + String(" humid=") + humidity;
-//    debugSerial.println(msg_tmphumid);
+/* #include <Wire.h> */
+/* #include <HDC1000.h> */
+
+/* HDC1000 hdc; */
+
+/* float temperature; */
+/* float humidity; */
+
+    /* hdc.begin(); delay(500); */
+    /* temperature = hdc.getTemperature(); */
+    /* delay(500); */
+    /* hdc.begin(); delay(500); */
+    /* humidity =  hdc.getHumidity(); */
+    /* String msg_tmphumid = String("tmp=") + temperature + String(" humid=") + humidity; */
+    /* debugSerial.println(msg_tmphumid); */
