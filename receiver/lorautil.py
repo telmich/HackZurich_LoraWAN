@@ -3,6 +3,8 @@
 # 2016-11-02
 # GPLv3+
 
+import psycopg2
+
 dbname="lorawan"
 
 def db_notify(provider, payload='', deveui=''):

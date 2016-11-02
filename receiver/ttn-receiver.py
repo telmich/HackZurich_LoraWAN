@@ -13,6 +13,8 @@ import json
 import base64
 import os
 
+import lorautil
+
 #Call back functions
 
 # gives connection message
@@ -29,12 +31,12 @@ def on_message(client,userdata,msg):
     payload = base64.b64decode(mydict['payload']).decode('utf-8')
 
     print("{}: {}".format(deveui, payload))
-    insert_json("ttn", myjson, payload, deveui)
+    lorautil.db_insert_json("ttn", myjson, payload, deveui)
+    lorautil.db_notify("ttn", payload, deveui)
 
 def on_log(client,userdata,level,buf):
     print("message:" + msg)
     print("userdata:" + str(userdata))
-
 
 
 if __name__ == '__main__':
