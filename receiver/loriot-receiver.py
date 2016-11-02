@@ -5,6 +5,7 @@ import websocket
 import json
 import os
 import psycopg2
+import lorautil
 
 class Loriot():
     def __init__(self):
