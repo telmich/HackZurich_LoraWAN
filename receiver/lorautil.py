@@ -36,5 +36,5 @@ def db_insert_json(provider, data, payload='', deveui=''):
     except Exception as e:
         log.error("DB Insert failed: %s" % e)
 
-def jsonToDict(self, data):
+def jsonToDict(data):
     return json.loads(data)
