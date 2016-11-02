@@ -1,18 +1,17 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <math.h>
-
 #include "nsarduino.h"
+
+#define DEBUG 1
 
 #define debugSerial SerialUSB
 
-/* Which network to use */
+/* Which network to use, which device it is (internal only) */
 #define LORADEV 1
-// #define SWISSCOM 1
+#define SWISSCOM 1
 // #define LORIOT 1
-#define TTN 1
-
-#define BUZZER_PIN 2
+// #define TTN 1
 
 void signal_loop_start()
 {
@@ -21,8 +20,7 @@ void signal_loop_start()
     blink(30); delay(50);
 }
 
-
-int sleepcnt;
+int cnt;
 
 void setup() {
     while ((!SerialUSB) && (millis() < 10000)){
@@ -34,18 +32,15 @@ void setup() {
     digitalWrite(11, HIGH);
 
     setupLED();
-    gpsSetup();
+    // gpsSetup();
 
     // setupBuzzer();
 
-    setupCompass();
-    setupSunLight();
+    // setupCompass();
+//    setupSunLight();
     loraSetup();
 
-
-    /* sleep little in the beginning, longer the longer we run */
-    sleepcnt = 0;
-
+    cnt = 0;
 }
 
 
@@ -63,33 +58,48 @@ void sendFloatAsString(String prefix, float value) {
 
 
 String tmps;
+float tmp;
 
 #define TEMP_PIN 2
 #define LOUDNESS_PIN 0
+#define BUZZER_PIN 2
 
-#define SLEEPTIME 5*60*1000
+#define SLEEPTIME 10000
+
+#define LOUDNESS_AVG 6
+int loudnesses[LOUDNESS_AVG];
 
 void loop() {
     signal_loop_start();
 
-    sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
 
-    /* loraSend(String("node=")  + String(deviceNo)); */
-    sendIntAsString("battery=", getBatteryVoltage());
-    sendIntAsString("loudness=", readLoudness(LOUDNESS_PIN));
-    loraSend(getSunLight());
-    loraSend(getCompass());
 
-    if((tmps = gpsGetPostion(120)) != "") {
-        loraSend(tmps);
-    }
+//    sendIntAsString("loudness=", readLoudness(LOUDNESS_PIN));
+//    loraSend(getSunLight());
+    // loraSend(getTempHumidHDC1000());
+    // loraSend(getCompass());
 
-    if(sleepcnt < 10) {
-        sleepcnt++;
-        delay(10000);
+    /* if((tmps = gpsGetPostion(120)) != "") { */
+    /*     loraSend(tmps); */
+    /* } */
+
+    if(cnt < LOUDNESS_AVG) {
+        loudnesses[cnt] = readLoudness(LOUDNESS_PIN);
+        debugSerial.println("temploudness=" + String(loudnesses[cnt]));
+        cnt++;
     } else {
-        delay(SLEEPTIME);
+        tmp = 0;
+        for(cnt = 0; cnt < LOUDNESS_AVG; cnt++) {
+            tmp += loudnesses[cnt];
+        }
+        tmp = tmp / (float) (cnt+1);
+
+        sendFloatAsString("loudness=", tmp);
+        sendIntAsString(  "battery=", getBatteryVoltage());
+//        sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
+        cnt = 0;
     }
+    delay(SLEEPTIME);
 }
 
 
@@ -113,19 +123,3 @@ hex: 3030303441333042
 
 
 */
-
-/* #include <Wire.h> */
-/* #include <HDC1000.h> */
-
-/* HDC1000 hdc; */
-
-/* float temperature; */
-/* float humidity; */
-
-    /* hdc.begin(); delay(500); */
-    /* temperature = hdc.getTemperature(); */
-    /* delay(500); */
-    /* hdc.begin(); delay(500); */
-    /* humidity =  hdc.getHumidity(); */
-    /* String msg_tmphumid = String("tmp=") + temperature + String(" humid=") + humidity; */
-    /* debugSerial.println(msg_tmphumid); */

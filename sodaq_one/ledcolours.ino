@@ -42,9 +42,11 @@ void blink(int length) {
 #elif LORADEV == 2
         RED();
 #elif LORADEV == 3
-        GREEN();
+        YELLOW();
 #elif LORADEV == 4
         WHITE();
+#else
+        GREEN();
 #endif
     delay(length);
     CLEAR();

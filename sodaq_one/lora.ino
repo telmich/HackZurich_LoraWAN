@@ -4,7 +4,6 @@
 #define loraSerial Serial1
 #define beePin ENABLE_PIN_IO
 
-
 #ifdef LORA_ABP
 void setupLoRaABP(){
   if (LoRaBee.initABP(loraSerial, devAddr, appSKey, nwkSKey, true))
@@ -34,7 +33,7 @@ void setupLoRaOTAA(){
 
 void loraSetup()
 {
-    pinMode(ENABLE_PIN_IO, OUTPUT); // ONE
+    pinMode(beePin, OUTPUT); // ONE
     digitalWrite(beePin, HIGH); // Lorawan
     loraSerial.begin(LoRaBee.getDefaultBaudRate());
 
@@ -48,6 +47,7 @@ void loraSetup()
 }
 
 void loraSend(String packet){
+    debugSerial.println("Trying to send: " + packet);
     switch (LoRaBee.sendReqAck(1, (uint8_t*)packet.c_str(), packet.length(), 8))
     {
     case NoError:
