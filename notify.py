@@ -1,3 +1,8 @@
+# Send lora packet to node-red when being triggered by postgresql
+# Nico Schottelius <nico.schottelius -at- ungleich.ch>
+# 2016-11-02
+# GPLv3+
+
 import select
 import psycopg2
 import psycopg2.extensions
@@ -5,11 +10,11 @@ import websocket
 
 channels = [ "loriot", "swisscom", "ttn" ]
 
-def to_nodered(self, data):
+def to_nodered(self, provider, data):
     dev = self.devEUI(data)
     text = self.payload(data)
 
-    ws = websocket.create_connection("ws://localhost:1880/")
+    ws = websocket.create_connection("ws://localhost:1880/{}".format(provider))
     ws.send("%s" % data)
     ws.close()
 
@@ -21,6 +26,7 @@ def wait_for_pkg(conns):
         while conn.notifies:
             notify = conn.notifies.pop(0)
             print("Got NOTIFY: {} {} {}".format(notify.pid, notify.channel, notify.payload))
+            to_nodered(notify.channel, notify.payload)
 
 if __name__ == '__main__':
     conns = []
@@ -36,4 +42,4 @@ if __name__ == '__main__':
         print("Waiting for notifications on channel {}".format(channel))
 
     while True:
-        wait_for_pkg(conns):
+        wait_for_pkg(conns)
