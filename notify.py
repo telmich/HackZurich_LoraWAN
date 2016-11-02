@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Send lora packet to node-red when being triggered by postgresql
 # Nico Schottelius <nico.schottelius -at- ungleich.ch>
 # 2016-11-02

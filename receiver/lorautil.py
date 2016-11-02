@@ -4,6 +4,7 @@
 # GPLv3+
 
 import psycopg2
+import json
 
 dbname="lorawan"
 
@@ -28,3 +29,6 @@ def db_insert_json(provider, data, payload='', deveui=''):
         conn.close()
     except Exception as e:
         print("DB Insert failed: %s" % e)
+
+def jsonToDict(self, data):
+    return json.loads(data)

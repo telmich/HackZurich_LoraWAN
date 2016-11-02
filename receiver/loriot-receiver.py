@@ -14,21 +14,14 @@ class Loriot():
         tokenurl = os.environ['LORIOT_URL']
         self.ws = websocket.create_connection(tokenurl, sslopt={"cert_reqs": ssl.CERT_NONE})
 
-
     def listen(self):
         while True:
             result = self.ws.recv()
             print(result)
 
-            jdata = self.jsonToDict(result)
+            jdata = lorautil.jsonToDict(result)
             eui = self.devEUI(jdata)
-            self.insert_json("loriot", result, deveui=eui)
-
-            # payload = self.get_payload(jdata)
-
-
-    def jsonToDict(self, data):
-        return json.loads(data)
+            lorautil.insert_json("loriot", result, deveui=eui)
 
     def devEUI(self, data):
         return data['EUI']
@@ -36,17 +29,6 @@ class Loriot():
     def get_payload(self, data):
         return ""
         # return data['EUI']
-
-    def insert_json(self, provider, data, payload='', deveui=''):
-        try:
-            conn = psycopg2.connect("dbname=lorawan")
-            cursor = conn.cursor()
-            cursor.execute("insert into packets values (DEFAULT, DEFAULT, %s, %s, %s, %s)",  (provider, data, payload, deveui))
-            cursor.connection.commit()
-            conn.close()
-        except Exception as e:
-            print("DB Insert failed: %s" % e)
-
 
 if __name__ == '__main__':
     l = Loriot()
