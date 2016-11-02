@@ -42,12 +42,22 @@ def insert_json(provider, data, payload='', deveui=''):
         cursor.execute("insert into packets values (DEFAULT, DEFAULT, %s, %s, %s, %s)",  (provider, data, payload, deveui))
         cursor.connection.commit()
 
-        notify="{}/{}".format(deveui, payload)
-        cursor.execute("select pg_notify ('lora', %s)",  (notify))
-        cursor.connection.commit()
         conn.close()
     except Exception as e:
         print("DB Insert failed: %s" % e)
+
+    notify(payload, deveui)
+
+def notify(payload='', deveui=''):
+    try:
+        conn = psycopg2.connect("dbname=lorawan")
+        cursor = conn.cursor()
+        notify="{}:{}".format(deveui, payload)
+        cursor.execute("select pg_notify ('lora', %s)",  (notify))
+        cursor.connection.commit()
+    except Exception as e:
+        print("DB Notify failed: %s" % e)
+
 
 if __name__ == '__main__':
     mqttc= mqtt.Client()
