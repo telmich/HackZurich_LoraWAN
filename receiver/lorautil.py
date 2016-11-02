@@ -7,7 +7,6 @@ import psycopg2
 import json
 import logging
 
-logging.basicConfig(format=FORMAT)
 log = logging.getLogger("lorautil")
 log.setLevel(logging.DEBUG)
 
