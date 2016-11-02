@@ -29,7 +29,7 @@ class Loriot():
                 payload = ""
 
             lorautil.db_insert_json("loriot", result, payload=payload, deveui=eui)
-            lorautul.db_notify("loriot", payload=payload, deveui=eui)
+            lorautil.db_notify("loriot", payload=payload, deveui=eui)
 
     def devEUI(self, data):
         return data['EUI']
