@@ -4,6 +4,9 @@
 # www.schimmel-bisolutions.nl
 # first install paho.mqtt.client: pip install paho-mqtt
 #
+# Enhanced for lorawan in Digital Glarus by Nico Schottelius (nico.schottelius -at- ungleich.ch)
+#
+
 import paho.mqtt.client as mqtt
 import psycopg2
 import json
@@ -37,6 +40,10 @@ def insert_json(provider, data, payload='', deveui=''):
         conn = psycopg2.connect("dbname=lorawan")
         cursor = conn.cursor()
         cursor.execute("insert into packets values (DEFAULT, DEFAULT, %s, %s, %s, %s)",  (provider, data, payload, deveui))
+        cursor.connection.commit()
+
+        notify="{}/{}".format(deveui, payload)
+        cursor.execute("select pg_notify ('lora', %s)",  (notify))
         cursor.connection.commit()
         conn.close()
     except Exception as e:
