@@ -10,10 +10,7 @@ import websocket
 
 channels = [ "loriot", "swisscom", "ttn" ]
 
-def to_nodered(self, provider, data):
-    dev = self.devEUI(data)
-    text = self.payload(data)
-
+def to_nodered(provider, data):
     ws = websocket.create_connection("ws://localhost:1880/{}".format(provider))
     ws.send("%s" % data)
     ws.close()
