@@ -49,11 +49,12 @@ def insert_json(provider, data, payload='', deveui=''):
     notify(payload, deveui)
 
 def notify(payload='', deveui=''):
+    notify="{}:{}".format(deveui, payload)
     try:
         conn = psycopg2.connect("dbname=lorawan")
         cursor = conn.cursor()
-        notify="{}:{}".format(deveui, payload)
-        cursor.execute("select pg_notify ('lora', %s)",  (notify))
+
+        cursor.execute("select pg_notify ('lora', %s)",  (notify, ))
         cursor.connection.commit()
     except Exception as e:
         print("DB Notify failed: %s" % e)
