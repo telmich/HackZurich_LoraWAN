@@ -2,13 +2,15 @@ import select
 import psycopg2
 import psycopg2.extensions
 
+channel = "lora"
+
 conn = psycopg2.connect("dbname=lorawan")
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 curs = conn.cursor()
-curs.execute("LISTEN test;")
+curs.execute("LISTEN {};".format(channel))
 
-print("Waiting for notifications on channel test")
+print("Waiting for notifications on channel {}".format(channel))
 while True:
     if select.select([conn],[],[]) == ([],[],[]):
         print("Timeout")
