@@ -18,9 +18,10 @@ def to_nodered(provider, data):
     ws.close()
 
 def wait_for_pkg(conns):
-    if select.select(conns,[],[]) == ([],[],[]):
-        print("Select error")
-    else:
+
+    readable, writable, exceptional = select.select(conns,[],[])
+
+    for conn in readable:
         conn.poll()
         while conn.notifies:
             notify = conn.notifies.pop(0)
