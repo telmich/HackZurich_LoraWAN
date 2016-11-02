@@ -31,9 +31,6 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         lorautil.db_insert_json("swisscom", post_data, payload, deveui)
         lorautil.db_notify("swisscom", payload, deveui)
 
-    def jsonToDict(self, data):
-        return json.loads(data)
-
     def dictToPayload(self, thedict):
         return thedict['DevEUI_uplink']['payload_hex']
 
@@ -41,27 +38,18 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         return bytes.fromhex(myhex).decode('utf-8')
 
     def dataToString(self, data):
-        mydict = self.jsonToDict(data)
+        mydict = lorautil.jsonToDict(data)
         payload = self.dictToPayload(mydict)
         return self.hexToString(payload)
 
     def dataToDevEUI(self, data):
-        mydict = self.jsonToDict(data)
+        mydict = lorautil.jsonToDict(data)
         eui = mydict['DevEUI_uplink']['DevEUI']
         return eui
-
-    def devEUI(self, data):
-        root = ET.fromstring(data)
-        return root[1].text
-
-    def payload_hex(self, data):
-        root = ET.fromstring(data)
-        return root[7].text
 
     def payload(self, data):
         myhex = self.payload_hex(data)
         return bytes.fromhex(myhex).decode('utf-8')
-
 
 if __name__ == '__main__':
     server_address = ('0.0.0.0', 8000)
