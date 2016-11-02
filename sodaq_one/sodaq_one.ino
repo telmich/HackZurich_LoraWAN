@@ -5,9 +5,6 @@
 
 #define debugSerial SerialUSB
 
-/* Which network to use, which device it is. Evaluated by internal.ino */
-#define LORADEV 1
-// #define PROVIDER LORIOT
 
 void signal_loop_start()
 {
