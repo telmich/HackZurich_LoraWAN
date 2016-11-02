@@ -3,15 +3,11 @@
 #include <math.h>
 #include "nsarduino.h"
 
-#define DEBUG 1
-
 #define debugSerial SerialUSB
 
-/* Which network to use, which device it is (internal only) */
+/* Which network to use, which device it is. Evaluated by internal.ino */
 #define LORADEV 1
-#define SWISSCOM 1
-// #define LORIOT 1
-// #define TTN 1
+// #define PROVIDER LORIOT
 
 void signal_loop_start()
 {
@@ -96,7 +92,7 @@ void loop() {
 
         sendFloatAsString("loudness=", tmp);
         sendIntAsString(  "battery=", getBatteryVoltage());
-//        sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
+        sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
         cnt = 0;
     }
     delay(SLEEPTIME);
