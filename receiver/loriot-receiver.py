@@ -21,14 +21,20 @@ class Loriot():
 
             jdata = lorautil.jsonToDict(result)
             eui = self.devEUI(jdata)
-            lorautil.insert_json("loriot", result, deveui=eui)
+
+            try:
+                payload = get_payload(jdata)
+            except Exception:
+                payload = ""
+
+            lorautil.db_insert_json("loriot", result, payload=payload, deveui=eui)
+            lorautul.db_notify("loriot", payload=payload, deveui=eui)
 
     def devEUI(self, data):
         return data['EUI']
 
     def get_payload(self, data):
-        return ""
-        # return data['EUI']
+        return bytes.fromhex(data['payload']).decode('utf-8')
 
 if __name__ == '__main__':
     l = Loriot()
