@@ -29,9 +29,17 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(length).decode('utf-8')
 
-        payload = self.dataToString(post_data)
-        deveui = self.dataToDevEUI(post_data)
-        print("{}:{}".format(deveui, payload))
+        try:
+            payload = self.dataToString(post_data)
+        except UnicodeDecodeError:
+            payload = ""
+
+        try:
+            deveui = self.dataToDevEUI(post_data)
+        except UnicodeDecodeError:
+            deveui = ""
+
+        print("deveui/payload: {}:{}".format(deveui, payload))
 
         # And insert into the db
         self.insert_json("swisscom", post_data, payload, deveui)
