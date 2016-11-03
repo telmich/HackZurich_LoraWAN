@@ -12,8 +12,12 @@ import psycopg2
 import json
 import base64
 import os
+import logging
 
 import lorautil
+
+log = logging.getLogger("ttn")
+log.setLevel(logging.DEBUG)
 
 #Call back functions
 
@@ -30,19 +34,23 @@ def on_message(client,userdata,msg):
     deveui = mydict['dev_eui']
     payload = base64.b64decode(mydict['payload']).decode('utf-8')
 
-    print("{}: {}".format(deveui, payload))
+    log.info("Message received: {}: {}".format(deveui, payload))
     lorautil.db_insert_json("ttn", myjson, payload, deveui)
     lorautil.db_notify("ttn", payload, deveui)
 
 def on_log(client,userdata,level,buf):
-    print("message:" + msg)
-    print("userdata:" + str(userdata))
+    log.debug("message:" + msg)
+    log.debug("userdata:" + str(userdata))
 
+def on_disconnect(client, userdata, rc):
+    log.debug("reconnecting...")
+    client.reconnect()
 
 if __name__ == '__main__':
     mqttc= mqtt.Client()
     mqttc.on_connect=on_connect
     mqttc.on_message=on_message
+    mqttc.on_disconnect=on_disconnect
 
     print("Connecting to ttn")
     username=os.environ['ttn_user']
