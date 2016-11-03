@@ -5,7 +5,6 @@
 
 #define debugSerial SerialUSB
 
-
 void signal_loop_start()
 {
     blink(30); delay(50);
@@ -36,26 +35,12 @@ void setup() {
     cnt = 0;
 }
 
-
-void sendIntAsString(String prefix, int value) {
-    String tmp = prefix + String(value);
-    debugSerial.println(tmp);
-    loraSend(tmp);
-}
-
-void sendFloatAsString(String prefix, float value) {
-    String tmp = prefix + String(value);
-    debugSerial.println(tmp);
-    loraSend(tmp);
-}
-
-
 String tmps;
 float tmp;
 
 #define TEMP_PIN 2
 #define LOUDNESS_PIN 0
-#define BUZZER_PIN 2
+#define BUZZER_PIN 6
 
 #define SLEEPTIME 10000
 
@@ -66,7 +51,6 @@ void loop() {
     signal_loop_start();
 
 
-
 //    sendIntAsString("loudness=", readLoudness(LOUDNESS_PIN));
 //    loraSend(getSunLight());
     // loraSend(getTempHumidHDC1000());
@@ -75,6 +59,8 @@ void loop() {
     /* if((tmps = gpsGetPostion(120)) != "") { */
     /*     loraSend(tmps); */
     /* } */
+
+
 
     if(cnt < LOUDNESS_AVG) {
         loudnesses[cnt] = readLoudness(LOUDNESS_PIN);
@@ -87,8 +73,8 @@ void loop() {
         }
         tmp = tmp / (float) (cnt+1);
 
+        sendIntAsString("battery=", getBatteryVoltage());
         sendFloatAsString("loudness=", tmp);
-        sendIntAsString(  "battery=", getBatteryVoltage());
         sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
         cnt = 0;
     }

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "Sodaq_RN2483.h"
+#include "internal.h"
 
 #define loraSerial Serial1
 #define beePin ENABLE_PIN_IO
@@ -90,4 +91,16 @@ void loraSend(String packet){
 
     /* Delay some time to give avoid keeping the device busy */
     delay(2000);
+}
+
+void sendIntAsString(String prefix, int value) {
+    String tmp = prefix + String(value);
+    debugSerial.println(tmp);
+    loraSend(tmp);
+}
+
+void sendFloatAsString(String prefix, float value) {
+    String tmp = prefix + String(value);
+    debugSerial.println(tmp);
+    loraSend(tmp);
 }

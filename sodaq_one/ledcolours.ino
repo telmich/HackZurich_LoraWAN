@@ -40,11 +40,12 @@ void blink(int length) {
 #if LORADEV == 1
         BLUE();
 #elif LORADEV == 2
-        RED();
+        WHITE();
 #elif LORADEV == 3
         YELLOW();
 #elif LORADEV == 4
-        WHITE();
+        RED();
+
 #else
         GREEN();
 #endif

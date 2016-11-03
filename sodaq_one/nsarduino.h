@@ -1,7 +1,3 @@
-#define SWISSCOM 1
-#define TTN 2
-#define LORIOT 3
-
 
 /* battery.ino */
 uint16_t getBatteryVoltage();
