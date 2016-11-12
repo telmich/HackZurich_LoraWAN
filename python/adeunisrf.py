@@ -39,13 +39,13 @@ def get_gps(deveui, payload):
         lat_frac_sec = float(payload[10:11])
         lat = lat_deg + lat_min/60.0 + lat_sec/3600.0 + lat_frac_sec/36000.0
 
-        long_deg = float(payload[12:15])
-        long_min = float(payload[15:17])
-        long_sec = float(payload[17:19])
-        long_frac_sec = float(payload[19:20])
-        long = long_deg + long_min/60.0 + long_sec/3600 + long_frac_sec/36000.0
+        lon_deg = float(payload[12:15])
+        lon_min = float(payload[15:17])
+        lon_sec = float(payload[17:19])
+        lon_frac_sec = float(payload[19:20])
+        long = lon_deg + lon_min/60.0 + lon_sec/3600 + lon_frac_sec/36000.0
 
-        pos = ":lat={:.6f} long={:.6f}".format(lat, long)
+        pos = ":lat={:.6f} lon={:.6f}".format(lat, lon)
         res = [ deveui + pos ]
 
     except ValueError as e:

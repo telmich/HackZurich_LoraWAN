@@ -7,6 +7,7 @@
 
 
 import lorautil
+import logging
 
 log = logging.getLogger("notify")
 log.setLevel(logging.DEBUG)
