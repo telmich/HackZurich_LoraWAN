@@ -10,7 +10,10 @@ import psycopg2
 import psycopg2.extensions
 import websocket
 
+import adeunisrf
+
 channels = [ "loriot", "swisscom", "ttn" ]
+
 
 def to_nodered(provider, data):
     ws = websocket.create_connection("ws://localhost:1880/{}".format(provider))

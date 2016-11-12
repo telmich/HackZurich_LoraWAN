@@ -15,15 +15,14 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(length).decode('utf-8')
 
-        try:
-            payload = self.dataToString(post_data)
-        except UnicodeDecodeError:
-            payload = ""
+        payload = self.payload_hex(post_data)
+        deveui = self.get_deveui(post_data)
 
+        # Try to decode to unicode
         try:
-            deveui = self.dataToDevEUI(post_data)
+            payload = self.data_to_unicode(payload)
         except UnicodeDecodeError:
-            deveui = ""
+            pass
 
         print("deveui/payload: {}:{}".format(deveui, payload))
 
@@ -31,25 +30,18 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         lorautil.db_insert_json("swisscom", post_data, payload, deveui)
         lorautil.db_notify("swisscom", payload, deveui)
 
-    def dictToPayload(self, thedict):
-        return thedict['DevEUI_uplink']['payload_hex']
+    def payload_hex(self, data):
+        mydict = lorautil.jsonToDict(data)
+        return mydict['DevEUI_uplink']['payload_hex']
 
-    def hexToString(self, myhex):
+    def data_to_unicode(self, myhex):
         return bytes.fromhex(myhex).decode('utf-8')
 
-    def dataToString(self, data):
-        mydict = lorautil.jsonToDict(data)
-        payload = self.dictToPayload(mydict)
-        return self.hexToString(payload)
-
-    def dataToDevEUI(self, data):
+    def get_deveui(self, data):
         mydict = lorautil.jsonToDict(data)
         eui = mydict['DevEUI_uplink']['DevEUI']
         return eui
 
-    def payload(self, data):
-        myhex = self.payload_hex(data)
-        return bytes.fromhex(myhex).decode('utf-8')
 
 if __name__ == '__main__':
     server_address = ('0.0.0.0', 8000)
