@@ -70,6 +70,8 @@ def decode_adeunis(pkg):
     res += get_temp(deveui, payload)
     res += get_gps(deveui, payload)
 
+    return res
+
 def nodered_adeunisrf(provider, data):
     res = decode_adeunis(data)
     if not res:
