@@ -9,6 +9,7 @@
 
 import binascii
 import lorautil
+import logging
 
 #              L A T I T U D E        L O N G I TU DE
 # status temp  deg min sec +hem   deg min  min  min
