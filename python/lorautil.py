@@ -66,6 +66,8 @@ def pg_conn_notify():
         conns.append(conn)
         log.debug("Waiting for notifications on channel {}".format(channel))
 
+    return conns
+
 def pg_wait_for_pkg(conns, callback):
     readable, writable, exceptional = select.select(conns,[],[])
 
