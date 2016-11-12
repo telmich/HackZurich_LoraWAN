@@ -16,4 +16,4 @@ if __name__ == '__main__':
     conns = lorautil.pg_conn_notify()
 
     while True:
-        pg_wait_for_pkg(conns, lorautil.nodered_send)
+        lorautil.pg_wait_for_pkg(conns, lorautil.nodered_send)
