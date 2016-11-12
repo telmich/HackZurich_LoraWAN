@@ -49,7 +49,10 @@ void loraSetup()
 
 void loraSend(String packet){
     debugSerial.println("Trying to send: " + packet);
-    switch (LoRaBee.sendReqAck(1, (uint8_t*)packet.c_str(), packet.length(), 8))
+
+    /* with ack */
+    //switch (LoRaBee.sendReqAck(1, (uint8_t*)packet.c_str(), packet.length(), 8))
+    switch (LoRaBee.send(1, (uint8_t*)packet.c_str(), packet.length()) )
     {
     case NoError:
         debugSerial.println("Successful transmission.");

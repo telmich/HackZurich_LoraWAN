@@ -12,6 +12,11 @@ void signal_loop_start()
     blink(30); delay(50);
 }
 
+#define TEMP_PIN 2
+#define LOUDNESS_PIN 0
+#define BUZZER_PIN 2
+#define WATER_SENSOR_PIN 6
+
 int cnt;
 
 void setup() {
@@ -24,7 +29,11 @@ void setup() {
     digitalWrite(11, HIGH);
 
     setupLED();
-    // gpsSetup();
+
+    // setupWater(WATER_SENSOR_PIN);
+    // setupBuzzer(BUZZER_PIN);
+
+    gpsSetup();
 
     // setupBuzzer();
 
@@ -38,46 +47,54 @@ void setup() {
 String tmps;
 float tmp;
 
-#define TEMP_PIN 2
-#define LOUDNESS_PIN 0
-#define BUZZER_PIN 6
-
 #define SLEEPTIME 10000
 
-#define LOUDNESS_AVG 6
+#define LOUDNESS_AVG 60
 int loudnesses[LOUDNESS_AVG];
 
 void loop() {
     signal_loop_start();
 
+    /* if(hasWater(WATER_SENSOR_PIN)) { */
+    /*     debugSerial.println("Having water"); */
+    /*     loraSend(getWater(WATER_SENSOR_PIN)); */
+    /*     buzz(BUZZER_PIN, 5000); */
+    /* } else { */
+    /*     loraSend(getWater(WATER_SENSOR_PIN)); */
+    /*     debugSerial.println("it's dry"); */
+    /* } */
 
-//    sendIntAsString("loudness=", readLoudness(LOUDNESS_PIN));
+
 //    loraSend(getSunLight());
     // loraSend(getTempHumidHDC1000());
     // loraSend(getCompass());
 
-    /* if((tmps = gpsGetPostion(120)) != "") { */
-    /*     loraSend(tmps); */
+
+    if((tmps = gpsGetPostion(120)) != "") {
+        loraSend(tmps);
+    }
+
+    sendIntAsString("battery=", getBatteryVoltage());
+
+
+    /* if(cnt < LOUDNESS_AVG) { */
+    /*     loudnesses[cnt] = readLoudness(LOUDNESS_PIN); */
+    /*     debugSerial.println("temploudness=" + String(loudnesses[cnt])); */
+    /*     cnt++; */
+    /* } else { */
+    /*     tmp = 0; */
+    /*     for(cnt = 0; cnt < LOUDNESS_AVG; cnt++) { */
+    /*         tmp += loudnesses[cnt]; */
+    /*     } */
+    /*     tmp = tmp / (float) (cnt+1); */
+
+    /*     sendIntAsString("battery=", getBatteryVoltage()); */
+    /*     sendFloatAsString("loudness=", tmp); */
+    /*     sendFloatAsString("temperature=", getTemperature(TEMP_PIN)); */
+    /*     cnt = 0; */
     /* } */
 
 
-
-    if(cnt < LOUDNESS_AVG) {
-        loudnesses[cnt] = readLoudness(LOUDNESS_PIN);
-        debugSerial.println("temploudness=" + String(loudnesses[cnt]));
-        cnt++;
-    } else {
-        tmp = 0;
-        for(cnt = 0; cnt < LOUDNESS_AVG; cnt++) {
-            tmp += loudnesses[cnt];
-        }
-        tmp = tmp / (float) (cnt+1);
-
-        sendIntAsString("battery=", getBatteryVoltage());
-        sendFloatAsString("loudness=", tmp);
-        sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
-        cnt = 0;
-    }
     delay(SLEEPTIME);
 }
 

@@ -1,20 +1,20 @@
 #include <Arduino.h>
 
-void setupBuzzer()
+void setupBuzzer(int pin)
 {
-    pinMode(BUZZER_PIN, OUTPUT);
+    pinMode(pin, OUTPUT);
 }
 
-void buzzerOn() {
-    digitalWrite(BUZZER_PIN, HIGH);
+void buzzerOn(int pin) {
+    digitalWrite(pin, HIGH);
 }
 
-void buzzerOff() {
-    digitalWrite(BUZZER_PIN, LOW);
+void buzzerOff(int pin) {
+    digitalWrite(pin, LOW);
 }
 
-void buzz(int ms) {
-     buzzerOn();
+void buzz(int pin, int ms) {
+     buzzerOn(pin);
      delay(ms);
-     buzzerOff();
+     buzzerOff(pin);
 }
