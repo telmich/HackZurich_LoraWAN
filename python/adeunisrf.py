@@ -26,7 +26,7 @@ known_devices = [ "0018B20000000C58", "0018B20000000C37", "0018B20000000C59", "0
 
 def get_gps(deveui, payload):
     res = []
-    if not payload[0] & (2**7):
+    if not int(payload[0:2], 16) & (2**7):
         return res
 
     lat_deg = float(payload[4:6])
@@ -49,7 +49,8 @@ def get_gps(deveui, payload):
 
 def get_temp(deveui, payload):
     res = []
-    if payload[0] & (2**7):
+
+    if int(payload[0:2], 16) & (2**7):
         res = [ deveui + ":temperature=" + str(binascii.a2b_hex(payload)[1])]
 
     return res
