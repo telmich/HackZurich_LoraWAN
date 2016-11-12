@@ -46,11 +46,10 @@ def get_gps(deveui, payload):
         long = long_deg + long_min/60.0 + long_sec/3600 + long_frac_sec/36000.0
 
         pos = ":lat={:.6f} long={:.6f}".format(lat, long)
+        res = [ deveui + pos ]
 
     except ValueError as e:
-        log.info("GPS decode error: {}:{} {}".format(deveui, payload, e))
-
-    res = [ deveui + pos ]
+        log.error("GPS decode error: {}:{} {}".format(deveui, payload, e))
 
     return res
 
