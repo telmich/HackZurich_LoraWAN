@@ -77,10 +77,8 @@ def nodered_adeunisrf(provider, data):
     if not res:
         return
 
-    with websocket.create_connection("ws://localhost:1880/{}".format(provider)) as ws:
-        for d in res:
-            ws.send("%s" % d)
-
+    for d in res:
+        lorautil.nodered_send(provider, d)
 
 if __name__ == '__main__':
     conns = lorautil.pg_conn_notify()
