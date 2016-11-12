@@ -7,10 +7,17 @@ import psycopg2
 import json
 import logging
 
+import select
+import psycopg2
+import psycopg2.extensions
+import websocket
+
+
 log = logging.getLogger("lorautil")
 log.setLevel(logging.DEBUG)
 
 dbname="lorawan"
+
 
 def db_notify(provider, payload='', deveui=''):
     notify="{}:{}".format(deveui, payload)
@@ -38,3 +45,34 @@ def db_insert_json(provider, data, payload='', deveui=''):
 
 def jsonToDict(data):
     return json.loads(data)
+
+
+def nodered_send(provider, data):
+    ws = websocket.create_connection("ws://localhost:1880/{}".format(provider))
+    ws.send("%s" % data)
+    ws.close()
+
+channels = [ "loriot", "swisscom", "ttn" ]
+
+def pg_conn_notify():
+    conns = []
+    for channel in channels:
+        conn = psycopg2.connect("dbname={}".format(dbname))
+        conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+
+        curs = conn.cursor()
+        curs.execute("LISTEN {};".format(channel))
+
+        conns.append(conn)
+        log.debug("Waiting for notifications on channel {}".format(channel))
+
+def pg_wait_for_pkg(conns, callback):
+    readable, writable, exceptional = select.select(conns,[],[])
+
+    for conn in readable:
+        conn.poll()
+        while conn.notifies:
+            notify = conn.notifies.pop(0)
+            log.debug("Got NOTIFY: {} {} {}".format(notify.pid, notify.channel, notify.payload))
+
+            callback(notify.channel, notify.payload)
