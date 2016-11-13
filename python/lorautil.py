@@ -15,6 +15,7 @@ import time
 import websocket
 
 
+logging.basicConfig(format='%(levelname)s: %(message)s')
 log = logging.getLogger(__name__)
 
 dbname="lorawan"
