@@ -16,7 +16,7 @@ import logging
 
 import lorautil
 
-logging.root.setLevel(logging.DEBUG)
+
 log = logging.getLogger(__name__)
 
 #Call back functions
@@ -39,7 +39,6 @@ def on_message(client,userdata,msg):
         log.info("Cannot decode packet as utf-8")
         payload = mydict['payload']
 
-
     log.info("Message received: {}: {}".format(deveui, payload))
     lorautil.db_insert_json("ttn", myjson, payload, deveui)
     lorautil.db_notify("ttn", payload, deveui)
@@ -53,6 +52,8 @@ def on_disconnect(client, userdata, rc):
     client.reconnect()
 
 if __name__ == '__main__':
+    logging.root.setLevel(logging.DEBUG)
+
     mqttc= mqtt.Client()
     mqttc.on_connect=on_connect
     mqttc.on_message=on_message

@@ -15,7 +15,7 @@ import time
 import websocket
 
 
-log = logging.getLogger("lorautil")
+log = logging.getLogger(__name__)
 
 dbname="lorawan"
 
