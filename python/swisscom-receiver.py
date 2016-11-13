@@ -24,7 +24,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         except UnicodeDecodeError:
             pass
 
-f        print("deveui/payload: {}:{}".format(deveui, payload))
+        print("deveui/payload: {}:{}".format(deveui, payload))
 
         # And insert into the db
         lorautil.db_insert_json("swisscom", post_data, payload, deveui)
