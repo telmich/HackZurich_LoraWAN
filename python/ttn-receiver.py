@@ -50,8 +50,10 @@ def on_disconnect(client, userdata, rc):
 if __name__ == '__main__':
     logging.root.setLevel(logging.DEBUG)
 
-    # log.setLevel(logging.DEBUG)
     log = logging.getLogger(__name__)
+    log.setLevel(logging.DEBUG)
+
+    print(log.getEffectiveLevel())
 
     mqttc= mqtt.Client()
     mqttc.on_connect=on_connect
