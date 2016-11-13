@@ -16,7 +16,7 @@ import logging
 
 import lorautil
 
-log.setLevel(logging.DEBUG)
+logging.root.setLevel(logging.DEBUG)
 log = logging.getLogger(__name__)
 
 #Call back functions
