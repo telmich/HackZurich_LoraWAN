@@ -32,7 +32,13 @@ def on_message(client,userdata,msg):
     myjson = msg.payload.decode('utf-8')
     mydict = json.loads(myjson)
     deveui = mydict['dev_eui']
-    payload = base64.b64decode(mydict['payload']).decode('utf-8')
+
+    try:
+        payload = base64.b64decode(mydict['payload']).decode('utf-8')
+    except UnicodeDecodeError as e:
+        log.info("Cannot decode packet as utf-8")
+        payload = mydict['payload']
+
 
     log.info("Message received: {}: {}".format(deveui, payload))
     lorautil.db_insert_json("ttn", myjson, payload, deveui)
