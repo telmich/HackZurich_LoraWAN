@@ -10,6 +10,8 @@ import logging
 import select
 import psycopg2
 import psycopg2.extensions
+import sys
+import time
 import websocket
 
 
@@ -45,6 +47,13 @@ def db_insert_json(provider, data, payload='', deveui=''):
 
 def jsonToDict(data):
     return json.loads(data)
+
+def nodered_from_stdin():
+    provider = sys.argv[1]
+    for line in sys.stdin:
+        print("{} -> {}".format(provider, line))
+        nodered_send(provider,line)
+        time.sleep(0.1)
 
 
 def nodered_send(provider, data):

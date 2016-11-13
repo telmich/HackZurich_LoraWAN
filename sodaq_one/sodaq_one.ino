@@ -47,6 +47,7 @@ void setup() {
 String tmps;
 float tmp;
 
+
 #define SLEEPTIME 10000
 
 #define LOUDNESS_AVG 60
@@ -69,12 +70,13 @@ void loop() {
     // loraSend(getTempHumidHDC1000());
     // loraSend(getCompass());
 
+    sendIntAsString("battery=", getBatteryVoltage());
 
     if((tmps = gpsGetPostion(120)) != "") {
         loraSend(tmps);
     }
 
-    sendIntAsString("battery=", getBatteryVoltage());
+
 
 
     /* if(cnt < LOUDNESS_AVG) { */

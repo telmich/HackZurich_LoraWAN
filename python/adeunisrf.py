@@ -10,6 +10,7 @@
 import binascii
 import lorautil
 import logging
+import sys
 
 #              L A T I T U D E        L O N G I TU DE
 # status temp  deg min sec +hem   deg min  min  min
@@ -26,6 +27,12 @@ log = logging.getLogger("adeunis")
 log.setLevel(logging.DEBUG)
 
 known_devices = [ "0018B20000000C58", "0018B20000000C37", "0018B20000000C59", "0018B20000000CD0" ]
+
+def convert_gps_from_stdin():
+    for line in sys.stdin:
+        res = get_gps("", line)
+        if res:
+            print(res[0][1:])
 
 def get_gps(deveui, payload):
     res = []
