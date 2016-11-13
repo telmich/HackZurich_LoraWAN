@@ -53,13 +53,14 @@ def on_disconnect(client, userdata, rc):
 
 if __name__ == '__main__':
     logging.root.setLevel(logging.DEBUG)
+    log.setLevel(logging.DEBUG)
 
     mqttc= mqtt.Client()
     mqttc.on_connect=on_connect
     mqttc.on_message=on_message
     mqttc.on_disconnect=on_disconnect
 
-    print("Connecting to ttn")
+    log.debug("Connecting to ttn")
     username=os.environ['ttn_user']
     password=os.environ['ttn_password']
 
