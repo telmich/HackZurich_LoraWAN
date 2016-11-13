@@ -16,7 +16,6 @@ import websocket
 
 
 log = logging.getLogger("lorautil")
-log.setLevel(logging.DEBUG)
 
 dbname="lorawan"
 

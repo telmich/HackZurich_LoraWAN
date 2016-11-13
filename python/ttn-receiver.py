@@ -16,8 +16,8 @@ import logging
 
 import lorautil
 
-log = logging.getLogger("ttn")
 log.setLevel(logging.DEBUG)
+log = logging.getLogger(__name__)
 
 #Call back functions
 
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     mqttc.connect("staging.thethingsnetwork.org",1883,10)
 
     # and listen to server
-    print("Listening via mqtt")
+    log.info("Listening via mqtt")
     run = True
     while run:
         mqttc.loop()
