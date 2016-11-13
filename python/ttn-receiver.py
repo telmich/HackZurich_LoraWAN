@@ -48,7 +48,7 @@ def on_disconnect(client, userdata, rc):
     client.reconnect()
 
 if __name__ == '__main__':
-    logging.root.setLevel(logging.DEBUG)
+    logging.root.setLevel(logging.INFO)
     logging.basicConfig(format='%(levelname)s: %(message)s')
 
     log = logging.getLogger(__name__)
