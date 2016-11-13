@@ -35,15 +35,18 @@ def get_gps(deveui, payload):
     try:
         lat_deg = float(payload[4:6])
         lat_min = float(payload[6:8])
-        lat_sec = float(payload[8:10])
-        lat_frac_sec = float(payload[10:11])
-        lat = lat_deg + lat_min/60.0 + lat_sec/3600.0 + lat_frac_sec/36000.0
+        lat_sec = float(payload[8:11])
+        # lat_frac_sec = float(payload[10:11])
+
+        # lat = lat_deg + lat_min/60.0 + lat_sec/3600.0 + lat_frac_sec/36000.0
+        lat = lat_deg + lat_min/60.0 + lat_sec/60000.0
 
         lon_deg = float(payload[12:15])
         lon_min = float(payload[15:17])
-        lon_sec = float(payload[17:19])
-        lon_frac_sec = float(payload[19:20])
-        lon = lon_deg + lon_min/60.0 + lon_sec/3600.0 + lon_frac_sec/36000.0
+        lon_sec = float(payload[17:20])
+        # lon_frac_sec = float(payload[19:20])
+        # lon = lon_deg + lon_min/60.0 + lon_sec/3600.0 + lon_frac_sec/36000.0
+        lon = lon_deg + lon_min/60.0 + lon_sec/60000.0
 
         pos = ":lat={:.6f} lon={:.6f}".format(lat, lon)
         res = [ deveui + pos ]
@@ -52,6 +55,10 @@ def get_gps(deveui, payload):
         log.error("GPS decode error: {}:{} {}".format(deveui, payload, e))
 
     return res
+
+# sodaq : lat=46.9924235 lon=9.0734456
+# garmin:  46 59.548 -- 9 04.360
+# adeunis: 46 59 539 -- 9 04 350
 
 def get_temp(deveui, payload):
     res = []
