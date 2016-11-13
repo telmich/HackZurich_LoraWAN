@@ -43,7 +43,7 @@ def get_gps(deveui, payload):
         lon_min = float(payload[15:17])
         lon_sec = float(payload[17:19])
         lon_frac_sec = float(payload[19:20])
-        long = lon_deg + lon_min/60.0 + lon_sec/3600 + lon_frac_sec/36000.0
+        long = lon_deg + lon_min/60.0 + lon_sec/3600.0 + lon_frac_sec/36000.0
 
         pos = ":lat={:.6f} lon={:.6f}".format(lat, lon)
         res = [ deveui + pos ]
