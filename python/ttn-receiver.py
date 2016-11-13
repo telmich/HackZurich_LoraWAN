@@ -17,17 +17,13 @@ import logging
 import lorautil
 
 
-log = logging.getLogger(__name__)
 
-#Call back functions
-
-# gives connection message
 def on_connect(client,userdata,rc):
-    print("Connected with result code:"+str(rc))
+    log.debug("Connected with result code:"+str(rc))
     # subscribe for all devices of user
     client.subscribe('+/devices/+/up')
 
-# gives message from device
+
 def on_message(client,userdata,msg):
     myjson = msg.payload.decode('utf-8')
     mydict = json.loads(myjson)
@@ -53,7 +49,9 @@ def on_disconnect(client, userdata, rc):
 
 if __name__ == '__main__':
     logging.root.setLevel(logging.DEBUG)
-    log.setLevel(logging.DEBUG)
+
+    # log.setLevel(logging.DEBUG)
+    log = logging.getLogger(__name__)
 
     mqttc= mqtt.Client()
     mqttc.on_connect=on_connect
