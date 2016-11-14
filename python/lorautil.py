@@ -20,7 +20,6 @@ log = logging.getLogger(__name__)
 
 dbname="lorawan"
 
-
 def db_notify(provider, payload='', deveui=''):
     notify="{}:{}".format(deveui, payload)
     log.debug("Notify: {} {}".format(provider, notify))

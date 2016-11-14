@@ -12,8 +12,6 @@ import lorautil
 import logging
 import sys
 
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
 
 known_devices = [ "0004A30B001C6613" ]
 
@@ -40,6 +38,8 @@ def get_gps(deveui, payload):
 
     text = ":lat={lat:.6f} lon={lon:.6f} alt={alt:.6f} acc={acc:.2f}".format(**values)
     res = [ deveui + text ]
+
+    log.debug("ttn mapper: {}".format(res[0]))
 
     return res
 
@@ -68,6 +68,10 @@ def nodered(provider, data):
         lorautil.nodered_send(provider, d)
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(levelname)s: %(message)s')
+    log = logging.getLogger(__name__)
+    log.setLevel(logging.DEBUG)
+
     conns = lorautil.pg_conn_notify()
 
     while True:
