@@ -38,8 +38,8 @@ def get_gps(deveui, payload):
     values['alt'] = parsed[6]*(2**8) + parsed[7]
     values['acc'] = parsed[8]/10.0
 
-    pos = ":lat={lat:.6f} lon={lon:.6f} alt={alt:.6f} acc={acc:.2f}.format(**values)
-    res = [ deveui + pos ]
+    text = ":lat={lat:.6f} lon={lon:.6f} alt={alt:.6f} acc={acc:.2f}".format(**values)
+    res = [ deveui + text ]
 
     return res
 
