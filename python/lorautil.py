@@ -94,7 +94,7 @@ class DB(object):
 
     @classmethod
     def gps_query(cls, since="1 day"):
-        return csl("select payload from packets where payload like 'lat%' and received_dt > NOW() - '{}'::INTERVAL".format(since))
+        return cls("select payload from packets where payload like 'lat%' and received_dt > NOW() - '{}'::INTERVAL".format(since))
 
     def __iter__(self):
         try:
