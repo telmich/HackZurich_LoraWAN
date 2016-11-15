@@ -99,7 +99,7 @@ class DB(object):
     def __iter__(self):
         try:
             self.conn = psycopg2.connect("dbname={}".format(dbname))
-            self.cursor = conn.cursor()
+            self.cursor = self.conn.cursor()
             self.cursor.execute(self.query)
         except Exception as e:
             log.error("DB query failed: %s" % e)
