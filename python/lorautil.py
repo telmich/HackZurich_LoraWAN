@@ -33,7 +33,6 @@ def db_notify(provider, payload='', deveui=''):
         log.error("DB Notify failed: %s" % e)
 
 def db_insert_json(provider, data, payload='', deveui=''):
-
     try:
         conn = psycopg2.connect("dbname={}".format(dbname))
         cursor = conn.cursor()
@@ -43,6 +42,7 @@ def db_insert_json(provider, data, payload='', deveui=''):
         conn.close()
     except Exception as e:
         log.error("DB Insert failed: %s" % e)
+
 
 def jsonToDict(data):
     return json.loads(data)
@@ -55,8 +55,8 @@ def nodered_from_stdin():
         time.sleep(0.1)
 
 
-def nodered_send(provider, data):
-    ws = websocket.create_connection("ws://localhost:1880/{}".format(provider))
+def nodered_send(path, data):
+    ws = websocket.create_connection("ws://localhost:1880/{}".format(path))
     ws.send("%s" % data)
     ws.close()
 
@@ -86,3 +86,31 @@ def pg_wait_for_pkg(conns, callback):
             log.debug("Got NOTIFY: {} {} {}".format(notify.pid, notify.channel, notify.payload))
 
             callback(notify.channel, notify.payload)
+
+
+class DB(object):
+    def __init__(query):
+        self.query = query
+
+    @classmethod
+    def gps_query(cls, since="1 day"):
+        return csl("select payload from packets where payload like 'lat%' and received_dt > NOW() - '{}'::INTERVAL".format(since))
+
+    def __iter__(self):
+        try:
+            self.conn = psycopg2.connect("dbname={}".format(dbname))
+            self.cursor = conn.cursor()
+            self.cursor.execute(self.query)
+        except Exception as e:
+            log.error("DB query failed: %s" % e)
+            raise
+
+        return self
+
+    def __next__(self):
+        data = self.cursor.fetchone()
+        if not data:
+            self.conn.close()
+            raise StopIteration
+
+        return data

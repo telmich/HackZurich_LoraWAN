@@ -13,20 +13,28 @@ import json
 import lorautil
 import logging
 
+logging.basicConfig(format='%(levelname)s: %(message)s')
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(length).decode('utf-8')
 
-        print(post_data)
+        try:
+            if json.loads(post_data)['action'] == "connected":
+                self.send_24h_gps()
 
-        # And insert into the db
-        #lorautil.db_insert_json("swisscom", post_data, payload, deveui)
-        #lorautil.db_notify("swisscom", payload, deveui)
+        except Exception as e:
+            log.error("Got unknown request: {} {}".format(post_data, e))
 
+    def send_24h_gps(self):
+        db = lorautil.DB.gps_query()
+
+        for record in db:
+            lorautil.nodered_send("gps-plain", record)
 
 if __name__ == '__main__':
+    log = logging.getLogger(__name__)
     server_address = ('0.0.0.0', 1900)
     httpd = HTTPServer(server_address, RequestHandler)
     httpd.serve_forever()
