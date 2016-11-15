@@ -17,6 +17,7 @@ String gpsGetPostion(long waittime)
     String res = "";
     uint32_t timeout = waittime * 1000;
 
+    YELLOW();
     debugSerial.println(String("waiting for fix ..., timeout=") + timeout + String("ms"));
 
     uint32_t start = millis();
@@ -31,6 +32,9 @@ String gpsGetPostion(long waittime)
     } else {
         debugSerial.println("GPS: No Fix");
     }
+
+    CLEAR();
+
     return res;
 }
 

@@ -45,7 +45,6 @@ void blink(int length) {
         YELLOW();
 #elif LORADEV == 4
         RED();
-
 #else
         GREEN();
 #endif

@@ -76,9 +76,6 @@ void loop() {
         loraSend(tmps);
     }
 
-
-
-
     /* if(cnt < LOUDNESS_AVG) { */
     /*     loudnesses[cnt] = readLoudness(LOUDNESS_PIN); */
     /*     debugSerial.println("temploudness=" + String(loudnesses[cnt])); */
