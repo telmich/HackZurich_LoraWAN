@@ -89,7 +89,7 @@ def pg_wait_for_pkg(conns, callback):
 
 
 class DB(object):
-    def __init__(query):
+    def __init__(self, query):
         self.query = query
 
     @classmethod

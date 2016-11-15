@@ -54,7 +54,7 @@ float tmp;
 int loudnesses[LOUDNESS_AVG];
 
 void loop() {
-    signal_loop_start();
+    // signal_loop_start();
 
     /* if(hasWater(WATER_SENSOR_PIN)) { */
     /*     debugSerial.println("Having water"); */
@@ -112,9 +112,3 @@ hex: 3030303441333042
 */
 
 /* temp / humidity code (not functional)
-
-/* humid / temperature */
-/*
-
-
-*/
