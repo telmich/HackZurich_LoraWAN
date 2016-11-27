@@ -93,6 +93,10 @@ def decode_adeunis(pkg):
     return res
 
 def nodered_adeunisrf(provider, data):
+    # ttn -> base64 encoded
+    if provider == "ttn":
+        data = base64.b64decode(data)
+
     res = decode_adeunis(data)
     if not res:
         return
