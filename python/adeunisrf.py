@@ -84,7 +84,7 @@ def decode_adeunis(provider, pkg):
 
     # ttn -> base64 encoded
     if provider == "ttn":
-        payload = base64.b64decode(payload)
+        binascii.b2a_hex(binascii.a2b_base64(payload))
 
     res = []
 
