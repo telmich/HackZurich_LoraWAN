@@ -26,7 +26,7 @@ import sys
 log = logging.getLogger("adeunis")
 log.setLevel(logging.DEBUG)
 
-known_devices = [ "0018B20000000C58", "0018B20000000C37", "0018B20000000C59", "0018B20000000CD0" ]
+known_devices = [ "0018B20000000C58", "0018B20000000C37", "0018B20000000C59", "0018B20000000CD0", "0018B200000001C5" ]
 
 def convert_gps_from_stdin():
     for line in sys.stdin:

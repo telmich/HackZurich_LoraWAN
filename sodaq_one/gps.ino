@@ -3,7 +3,7 @@
 
 void gpsSetup() {
      sodaq_gps.init(GPS_ENABLE);
-     }
+}
 
 /* FIXME: find out power consumption if turned off */
 // void gpsStop() { sodaq_gps.off(); }

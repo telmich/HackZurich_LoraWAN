@@ -25,3 +25,8 @@ void sendPacket(String packet);
 /* sunlight.ino */
 String getSunLight();
 void setupSunLight();
+
+/* gps.ino */
+void gpsSetup();
+String gpsGetPostion(long waittime);
+String gpsGetDateTime(long waittime);

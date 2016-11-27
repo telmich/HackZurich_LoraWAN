@@ -87,7 +87,6 @@ def pg_wait_for_pkg(conns, callback):
 
             callback(notify.channel, notify.payload)
 
-
 class DB(object):
     def __init__(self, query):
         self.query = query
