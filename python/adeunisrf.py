@@ -76,11 +76,15 @@ def get_temp(deveui, payload):
 
     return res
 
-def decode_adeunis(pkg):
+def decode_adeunis(provider, pkg):
     data = pkg.split(":")
 
     deveui = data[0]
     payload = data[1]
+
+    # ttn -> base64 encoded
+    if provider == "ttn":
+        payload = base64.b64decode(payload)
 
     res = []
 
@@ -94,11 +98,8 @@ def decode_adeunis(pkg):
     return res
 
 def nodered_adeunisrf(provider, data):
-    # ttn -> base64 encoded
-    if provider == "ttn":
-        data = base64.b64decode(data)
+    res = decode_adeunis(provider, data)
 
-    res = decode_adeunis(data)
     if not res:
         return
 
