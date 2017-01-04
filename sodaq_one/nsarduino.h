@@ -1,6 +1,8 @@
+#include <Arduino.h>
 
 /* battery.ino */
-uint16_t getBatteryVoltage();
+// uint16_t getBatteryVoltage();
+int getB();
 
 void blink(int length);
 

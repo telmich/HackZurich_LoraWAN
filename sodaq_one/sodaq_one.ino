@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <math.h>
+#include <Sodaq_UBlox_GPS.h>
 #include "nsarduino.h"
 
 #define debugSerial SerialUSB
@@ -33,7 +34,7 @@ void setup() {
     // setupWater(WATER_SENSOR_PIN);
     // setupBuzzer(BUZZER_PIN);
 
-    gpsSetup();
+    // gpsSetup();
 
     // setupBuzzer();
 
@@ -47,11 +48,11 @@ void setup() {
 String tmps;
 float tmp;
 
-
 #define SLEEPTIME 10000
 
 #define LOUDNESS_AVG 60
 int loudnesses[LOUDNESS_AVG];
+
 
 void loop() {
     // signal_loop_start();
@@ -70,28 +71,33 @@ void loop() {
     // loraSend(getTempHumidHDC1000());
     // loraSend(getCompass());
 
-    sendIntAsString("battery=", getBatteryVoltage());
 
-    if((tmps = gpsGetPostion(120)) != "") {
-        loraSend(tmps);
-    }
+//    sendIntAsString("battery=", getBatteryVoltage());
 
-    /* if(cnt < LOUDNESS_AVG) { */
-    /*     loudnesses[cnt] = readLoudness(LOUDNESS_PIN); */
-    /*     debugSerial.println("temploudness=" + String(loudnesses[cnt])); */
-    /*     cnt++; */
-    /* } else { */
-    /*     tmp = 0; */
-    /*     for(cnt = 0; cnt < LOUDNESS_AVG; cnt++) { */
-    /*         tmp += loudnesses[cnt]; */
-    /*     } */
-    /*     tmp = tmp / (float) (cnt+1); */
+    getB();
 
-    /*     sendIntAsString("battery=", getBatteryVoltage()); */
-    /*     sendFloatAsString("loudness=", tmp); */
-    /*     sendFloatAsString("temperature=", getTemperature(TEMP_PIN)); */
-    /*     cnt = 0; */
+    /* Tracker code */
+    /* if((tmps = gpsGetPostion(120)) != "") { */
+    /*     loraSend(tmps); */
     /* } */
+
+    /* Temp & loudness code */
+    if(cnt < LOUDNESS_AVG) {
+        loudnesses[cnt] = readLoudness(LOUDNESS_PIN);
+        debugSerial.println("temploudness=" + String(loudnesses[cnt]));
+        cnt++;
+    } else {
+        tmp = 0;
+        for(cnt = 0; cnt < LOUDNESS_AVG; cnt++) {
+            tmp += loudnesses[cnt];
+        }
+        tmp = tmp / (float) (cnt+1);
+
+//        sendIntAsString("battery=", getBatteryVoltage());
+        sendFloatAsString("loudness=", tmp);
+        sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
+        cnt = 0;
+    }
 
 
     delay(SLEEPTIME);
