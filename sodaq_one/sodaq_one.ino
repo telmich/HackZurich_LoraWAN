@@ -3,6 +3,7 @@
 #include <math.h>
 #include <Sodaq_UBlox_GPS.h>
 #include "nsarduino.h"
+#include "internal.h"
 
 #define debugSerial SerialUSB
 
@@ -15,7 +16,7 @@ void signal_loop_start()
 
 #define TEMP_PIN 2
 #define LOUDNESS_PIN 0
-#define BUZZER_PIN 2
+#define BUZZER_PIN 6
 #define WATER_SENSOR_PIN 6
 
 int cnt;
@@ -25,6 +26,8 @@ void setup() {
         // Wait 10 seconds for the Serial Monitor
     }
 
+    loraSetup();
+
     /* Enable the pins 2/3, 6/7 and 8/9 */
     pinMode(11, OUTPUT);
     digitalWrite(11, HIGH);
@@ -32,7 +35,7 @@ void setup() {
     setupLED();
 
     // setupWater(WATER_SENSOR_PIN);
-    // setupBuzzer(BUZZER_PIN);
+    setupBuzzer(BUZZER_PIN);
 
     // gpsSetup();
 
@@ -40,8 +43,8 @@ void setup() {
 
     // setupCompass();
 //    setupSunLight();
-    loraSetup();
 
+    buzz(BUZZER_PIN, 100);
     cnt = 0;
 }
 
@@ -53,9 +56,10 @@ float tmp;
 #define LOUDNESS_AVG 60
 int loudnesses[LOUDNESS_AVG];
 
-
 void loop() {
-    // signal_loop_start();
+    signal_loop_start();
+
+    debugSerial.println("Deveui=" + String(LORADEV) + " => " + String(LORA_ADDR));
 
     /* if(hasWater(WATER_SENSOR_PIN)) { */
     /*     debugSerial.println("Having water"); */
@@ -66,15 +70,11 @@ void loop() {
     /*     debugSerial.println("it's dry"); */
     /* } */
 
-
 //    loraSend(getSunLight());
     // loraSend(getTempHumidHDC1000());
     // loraSend(getCompass());
 
-
-//    sendIntAsString("battery=", getBatteryVoltage());
-
-    getB();
+    sendIntAsString("battery=", getBattery());
 
     /* Tracker code */
     /* if((tmps = gpsGetPostion(120)) != "") { */
@@ -93,12 +93,10 @@ void loop() {
         }
         tmp = tmp / (float) (cnt+1);
 
-//        sendIntAsString("battery=", getBatteryVoltage());
         sendFloatAsString("loudness=", tmp);
         sendFloatAsString("temperature=", getTemperature(TEMP_PIN));
         cnt = 0;
     }
-
 
     delay(SLEEPTIME);
 }

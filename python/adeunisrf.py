@@ -29,6 +29,8 @@ log.setLevel(logging.DEBUG)
 
 known_devices = [ "0018B20000000C58", "0018B20000000C37", "0018B20000000C59", "0018B20000000CD0", "0018B200000001C5" ]
 
+
+
 def convert_gps_from_stdin():
     for line in sys.stdin:
         res = get_gps("", line)
@@ -37,7 +39,8 @@ def convert_gps_from_stdin():
 
 def get_gps(deveui, payload):
     res = []
-    if not int(payload[0:2], 16) & (2**7):
+    if not int(payload[0:2], 16) & (2**4):
+        log.debug("No GPS information present")
         return res
 
     try:
@@ -84,7 +87,7 @@ def decode_adeunis(provider, pkg):
 
     # ttn -> base64 encoded
     if provider == "ttn":
-        binascii.b2a_hex(binascii.a2b_base64(payload))
+        payload = binascii.b2a_hex(binascii.a2b_base64(payload))
 
     res = []
 

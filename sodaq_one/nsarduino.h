@@ -2,13 +2,18 @@
 
 /* battery.ino */
 // uint16_t getBatteryVoltage();
-int getB();
+int getBattery();
 
 void blink(int length);
+void led_on();
+void led_off();
+
+
+void setupBuzzer(int pin);
 
 void buzzerOn();
 void buzzerOff();
-void buzz(int ms);
+void buzz(int pin, int ms);
 
 /* compass.ino */
 extern char compassReport[80];

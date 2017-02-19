@@ -36,10 +36,12 @@ void CLEAR() {
     digitalWrite(LED_BLUE, HIGH);
 }
 
-void blink(int length) {
+void led_on() {
 #if LORADEV == 1
         BLUE();
 #elif LORADEV == 2
+        WHITE();
+#elif LORADEV == 0xA2
         WHITE();
 #elif LORADEV == 3
         YELLOW();
@@ -48,6 +50,14 @@ void blink(int length) {
 #else
         GREEN();
 #endif
+}
+
+void led_off() {
+    CLEAR();
+}
+
+void blink(int length) {
+    led_on();
     delay(length);
     CLEAR();
 }

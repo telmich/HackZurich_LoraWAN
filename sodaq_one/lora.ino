@@ -49,7 +49,7 @@ void loraSetup()
 
 void loraSend(String packet){
     debugSerial.println("Trying to send: " + packet);
-    BLUE();
+    led_on();
 
     /* with ack */
     //switch (LoRaBee.sendReqAck(1, (uint8_t*)packet.c_str(), packet.length(), 8))
@@ -95,7 +95,7 @@ void loraSend(String packet){
 
     /* Delay some time to give avoid keeping the device busy */
     delay(2000);
-    CLEAR();
+    led_off();
 }
 
 void sendIntAsString(String prefix, int value) {
