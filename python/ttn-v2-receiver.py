@@ -8,12 +8,15 @@ import re
 import json
 import pprint
 import lorautil
+import base64
 
 # HTTPRequestHandler class
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(length).decode('utf-8')
+
+        print(post_data)
 
         payload = self.payload_hex(post_data)
         deveui = self.get_deveui(post_data)
@@ -32,15 +35,14 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
     def payload_hex(self, data):
         mydict = lorautil.jsonToDict(data)
-        return mydict['DevEUI_uplink']['payload_hex']
+        return mydict['payload_raw']
 
     def data_to_unicode(self, myhex):
-        return bytes.fromhex(myhex).decode('utf-8')
+        return base64.b64decode(myhex).decode('utf-8')
 
     def get_deveui(self, data):
         mydict = lorautil.jsonToDict(data)
-        eui = mydict['DevEUI_uplink']['DevEUI']
-        return eui
+        return mydict['hardware_serial']
 
 
 if __name__ == '__main__':
