@@ -7,6 +7,7 @@ int getBattery();
 void blink(int length);
 void led_on();
 void led_off();
+void signal_loop_start();
 
 
 void setupBuzzer(int pin);

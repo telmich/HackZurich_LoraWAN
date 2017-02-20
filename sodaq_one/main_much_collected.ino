@@ -7,25 +7,33 @@
 
 #define debugSerial SerialUSB
 
-void signal_loop_start()
-{
-    blink(30); delay(50);
-    blink(30); delay(50);
-    blink(30); delay(50);
-}
-
-#define TEMP_PIN 2
-#define LOUDNESS_PIN 0
-#define BUZZER_PIN 6
-#define WATER_SENSOR_PIN 6
-
 int cnt;
 
-void setup() {
+void setup_much_collected() {
     while ((!SerialUSB) && (millis() < 10000)){
         // Wait 10 seconds for the Serial Monitor
     }
 
+    loraSetup();
+
+    /* Enable the pins 2/3, 6/7 and 8/9 */
+    pinMode(11, OUTPUT);
+    digitalWrite(11, HIGH);
+
+    setupLED();
+
+    // setupWater(WATER_SENSOR_PIN);
+    setupBuzzer(BUZZER_PIN);
+
+    // gpsSetup();
+
+    // setupBuzzer();
+
+    // setupCompass();
+//    setupSunLight();
+
+    buzz(BUZZER_PIN, 100);
+    cnt = 0;
 }
 
 String tmps;
@@ -36,7 +44,7 @@ float tmp;
 
 int loudnesses[LOUDNESS_AVG];
 
-void loop() {
+void loop_much_collected() {
     signal_loop_start();
 
     debugSerial.println("Deveui = " + String(LORADEV) + " => " + String(LORA_ADDR));

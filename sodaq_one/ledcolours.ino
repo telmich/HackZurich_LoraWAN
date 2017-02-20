@@ -67,3 +67,10 @@ void setupLED() {
     pinMode(LED_GREEN, OUTPUT);
     pinMode(LED_BLUE, OUTPUT);
 }
+
+void signal_loop_start()
+{
+    blink(30); delay(50);
+    blink(30); delay(50);
+    blink(30); delay(50);
+}
